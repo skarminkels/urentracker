@@ -3,6 +3,9 @@ const KEYS = {
   projects: 'tt_projects',
   runningTimer: 'tt_running_timer',
   currency: 'tt_currency',
+  invoiceSettings: 'tt_invoice_settings',
+  invoices: 'tt_invoices',
+  invoiceCounter: 'tt_invoice_counter',
 }
 
 export function loadEntries() {
@@ -65,4 +68,43 @@ export function saveCurrency(symbol) {
 
 export function generateId() {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`
+}
+
+export function loadInvoiceSettings() {
+  try {
+    return JSON.parse(localStorage.getItem(KEYS.invoiceSettings) || 'null') || {}
+  } catch {
+    return {}
+  }
+}
+
+export function saveInvoiceSettings(settings) {
+  localStorage.setItem(KEYS.invoiceSettings, JSON.stringify(settings))
+}
+
+export function loadInvoices() {
+  try {
+    return JSON.parse(localStorage.getItem(KEYS.invoices) || '[]')
+  } catch {
+    return []
+  }
+}
+
+export function saveInvoices(invoices) {
+  localStorage.setItem(KEYS.invoices, JSON.stringify(invoices))
+}
+
+// Reads the next available invoice number, increments the counter, and returns the formatted string.
+// Only call this when actually generating a PDF.
+export function consumeInvoiceNumber() {
+  const year = new Date().getFullYear()
+  let stored = null
+  try {
+    stored = JSON.parse(localStorage.getItem(KEYS.invoiceCounter) || 'null')
+  } catch {
+    stored = null
+  }
+  const seq = (!stored || stored.year !== year) ? 1 : stored.seq
+  localStorage.setItem(KEYS.invoiceCounter, JSON.stringify({ year, seq: seq + 1 }))
+  return `${year}-${String(seq).padStart(3, '0')}`
 }

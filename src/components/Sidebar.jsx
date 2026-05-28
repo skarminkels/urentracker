@@ -1,8 +1,9 @@
-import { Timer, BarChart2, Folder, Clock } from 'lucide-react'
+import { Timer, BarChart2, Folder, Clock, Receipt } from 'lucide-react'
 
 const navItems = [
   { id: 'timer', label: 'Timer', icon: Timer },
   { id: 'reports', label: 'Reports', icon: BarChart2 },
+  { id: 'invoices', label: 'Facturatie', icon: Receipt },
   { id: 'projects', label: 'Projects', icon: Folder },
 ]
 

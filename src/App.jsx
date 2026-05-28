@@ -3,6 +3,7 @@ import Sidebar from './components/Sidebar'
 import TimerPage from './components/Timer/TimerPage'
 import ProjectsPage from './components/Projects/ProjectsPage'
 import ReportsPage from './components/Reports/ReportsPage'
+import InvoicesPage from './components/Invoices/InvoicesPage'
 import { useAppState } from './hooks/useAppState'
 
 export default function App() {
@@ -31,6 +32,13 @@ export default function App() {
         )}
         {page === 'reports' && (
           <ReportsPage
+            entries={state.entries}
+            projects={state.projects}
+            currency={state.currency}
+          />
+        )}
+        {page === 'invoices' && (
+          <InvoicesPage
             entries={state.entries}
             projects={state.projects}
             currency={state.currency}
