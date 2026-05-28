@@ -1,36 +1,49 @@
 import { useState } from 'react'
-import { DataProvider } from './context/DataContext'
 import Sidebar from './components/Sidebar'
-import Dashboard from './pages/Dashboard'
-import UrenLoggen from './pages/UrenLoggen'
-import Klanten from './pages/Klanten'
-import Factuuroverzicht from './pages/Factuuroverzicht'
-import Facturen from './pages/Facturen'
-import Instellingen from './pages/Instellingen'
+import TimerPage from './components/Timer/TimerPage'
+import ProjectsPage from './components/Projects/ProjectsPage'
+import ReportsPage from './components/Reports/ReportsPage'
+import { useAppState } from './hooks/useAppState'
 
-const PAGES = {
-  dashboard: Dashboard,
-  uren: UrenLoggen,
-  klanten: Klanten,
-  facturen: Facturen,
-  factuuroverzicht: Factuuroverzicht,
-  instellingen: Instellingen,
-}
-
-function App() {
-  const [page, setPage] = useState('dashboard')
-  const Page = PAGES[page]
+export default function App() {
+  const [page, setPage] = useState('timer')
+  const state = useAppState()
 
   return (
-    <DataProvider>
-      <div className="flex min-h-screen">
-        <Sidebar active={page} onNavigate={setPage} />
-        <main className="flex-1 overflow-auto bg-canvas">
-          <Page />
-        </main>
-      </div>
-    </DataProvider>
+    <div className="flex min-h-screen bg-[#f5f5f5] font-sans">
+      <Sidebar page={page} setPage={setPage} />
+
+      <main className="flex-1 flex flex-col overflow-auto">
+        {page === 'timer' && (
+          <TimerPage
+            entries={state.entries}
+            projects={state.projects}
+            runningTimer={state.runningTimer}
+            elapsed={state.elapsed}
+            startTimer={state.startTimer}
+            stopTimer={state.stopTimer}
+            continueEntry={state.continueEntry}
+            deleteEntry={state.deleteEntry}
+            updateEntry={state.updateEntry}
+            addManualEntry={state.addManualEntry}
+          />
+        )}
+        {page === 'reports' && (
+          <ReportsPage
+            entries={state.entries}
+            projects={state.projects}
+          />
+        )}
+        {page === 'projects' && (
+          <ProjectsPage
+            projects={state.projects}
+            entries={state.entries}
+            addProject={state.addProject}
+            updateProject={state.updateProject}
+            deleteProject={state.deleteProject}
+          />
+        )}
+      </main>
+    </div>
   )
 }
-
-export default App
