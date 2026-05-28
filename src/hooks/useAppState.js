@@ -43,12 +43,11 @@ export function useAppState() {
     return project?.hourlyRate ?? 0
   }, [projects])
 
-  const startTimer = useCallback((description, projectId, tags, billable) => {
+  const startTimer = useCallback((description, projectId, tags) => {
     const timer = {
       description: description || '',
       projectId: projectId || null,
       tags: tags || [],
-      billable: billable || false,
       startTime: Date.now(),
     }
     setRunningTimer(timer)
@@ -61,7 +60,6 @@ export function useAppState() {
       description: runningTimer.description,
       projectId: runningTimer.projectId,
       tags: runningTimer.tags,
-      billable: runningTimer.billable,
       startTime: runningTimer.startTime,
       endTime: Date.now(),
       rateAtTimeOfEntry: getRateSnapshot(runningTimer.projectId),
@@ -77,7 +75,6 @@ export function useAppState() {
         description: runningTimer.description,
         projectId: runningTimer.projectId,
         tags: runningTimer.tags,
-        billable: runningTimer.billable,
         startTime: runningTimer.startTime,
         endTime: Date.now(),
         rateAtTimeOfEntry: getRateSnapshot(runningTimer.projectId),
@@ -88,7 +85,6 @@ export function useAppState() {
       description: entry.description,
       projectId: entry.projectId,
       tags: entry.tags,
-      billable: entry.billable,
       startTime: Date.now(),
     }
     setRunningTimer(timer)

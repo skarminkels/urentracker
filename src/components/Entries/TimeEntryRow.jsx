@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Play, Pencil, Trash2, DollarSign } from 'lucide-react'
+import { Play, Pencil, Trash2 } from 'lucide-react'
 import { formatTime, formatDurationShort } from '../../utils/time'
 import { calcEarnings, formatCurrency } from '../../utils/currency'
 import EditEntryModal from './EditEntryModal'
@@ -37,11 +37,6 @@ export default function TimeEntryRow({ entry, projects, currency, onContinue, on
             <span className="text-xs text-gray-300">—</span>
           )}
         </div>
-
-        {/* Billable */}
-        {entry.billable && (
-          <DollarSign size={14} className="text-[#c95da7] shrink-0" />
-        )}
 
         {/* Time range */}
         <div className="hidden md:block text-xs text-gray-400 font-mono min-w-28 text-right">

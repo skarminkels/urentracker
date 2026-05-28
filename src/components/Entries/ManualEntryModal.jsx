@@ -1,11 +1,10 @@
 import { useState } from 'react'
-import { X, DollarSign, ChevronDown } from 'lucide-react'
+import { X, ChevronDown } from 'lucide-react'
 
 export default function ManualEntryModal({ projects, onAdd, onClose }) {
   const today = new Date().toISOString().split('T')[0]
   const [description, setDescription] = useState('')
   const [projectId, setProjectId] = useState(null)
-  const [billable, setBillable] = useState(false)
   const [date, setDate] = useState(today)
   const [startTime, setStartTime] = useState('09:00')
   const [endTime, setEndTime] = useState('10:00')
@@ -28,7 +27,6 @@ export default function ManualEntryModal({ projects, onAdd, onClose }) {
       description,
       projectId,
       tags: [],
-      billable,
       startTime: startTs,
       endTime: endTs,
     })
@@ -56,62 +54,50 @@ export default function ManualEntryModal({ projects, onAdd, onClose }) {
             className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-[#c95da7] transition-colors"
           />
 
-          <div className="flex items-center gap-2">
-            <div className="relative flex-1">
-              <button
-                type="button"
-                onClick={() => setShowProjectPicker(v => !v)}
-                className={`w-full flex items-center gap-2 px-4 py-3 rounded-xl border text-sm transition-colors ${
-                  activeProject
-                    ? 'border-transparent text-white'
-                    : 'border-gray-200 text-gray-500 hover:border-gray-300'
-                }`}
-                style={activeProject ? { backgroundColor: activeProject.color } : {}}
-              >
-                <span
-                  className="w-2 h-2 rounded-full"
-                  style={{ backgroundColor: activeProject ? 'rgba(255,255,255,0.7)' : '#d1d5db' }}
-                />
-                {activeProject ? activeProject.name : 'No project'}
-                <ChevronDown size={14} className="ml-auto" />
-              </button>
-              {showProjectPicker && (
-                <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-xl shadow-lg z-50 w-full py-1">
-                  <button
-                    type="button"
-                    onClick={() => { setProjectId(null); setShowProjectPicker(false) }}
-                    className="w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 flex items-center gap-2"
-                  >
-                    <span className="w-2 h-2 rounded-full bg-gray-300" />
-                    No project
-                  </button>
-                  {projects.map(p => (
-                    <button
-                      type="button"
-                      key={p.id}
-                      onClick={() => { setProjectId(p.id); setShowProjectPicker(false) }}
-                      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
-                    >
-                      <span className="w-2 h-2 rounded-full" style={{ backgroundColor: p.color }} />
-                      {p.name}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
+          <div className="relative">
             <button
               type="button"
-              onClick={() => setBillable(v => !v)}
-              className={`p-3 rounded-xl border transition-colors ${
-                billable
-                  ? 'border-[#c95da7] text-[#c95da7] bg-[#c95da7]/5'
-                  : 'border-gray-200 text-gray-400 hover:border-gray-300'
+              onClick={() => setShowProjectPicker(v => !v)}
+              className={`w-full flex items-center gap-2 px-4 py-3 rounded-xl border text-sm transition-colors ${
+                activeProject
+                  ? 'border-transparent text-white'
+                  : 'border-gray-200 text-gray-500 hover:border-gray-300'
               }`}
-              title="Billable"
+              style={activeProject ? { backgroundColor: activeProject.color } : {}}
             >
-              <DollarSign size={16} />
+              <span
+                className="w-2 h-2 rounded-full"
+                style={{ backgroundColor: activeProject ? 'rgba(255,255,255,0.7)' : '#d1d5db' }}
+              />
+              {activeProject ? activeProject.name : 'No project'}
+              <ChevronDown size={14} className="ml-auto" />
             </button>
+            {showProjectPicker && (
+              <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-xl shadow-lg z-50 w-full py-1">
+                <button
+                  type="button"
+                  onClick={() => { setProjectId(null); setShowProjectPicker(false) }}
+                  className="w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 flex items-center gap-2"
+                >
+                  <span className="w-2 h-2 rounded-full bg-gray-300" />
+                  No project
+                </button>
+                {projects.map(p => (
+                  <button
+                    type="button"
+                    key={p.id}
+                    onClick={() => { setProjectId(p.id); setShowProjectPicker(false) }}
+                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                  >
+                    <span className="w-2 h-2 rounded-full" style={{ backgroundColor: p.color }} />
+                    {p.name}
+                    {p.hourlyRate > 0 && (
+                      <span className="ml-auto text-xs text-gray-400">{p.hourlyRate}/u</span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="grid grid-cols-3 gap-3">

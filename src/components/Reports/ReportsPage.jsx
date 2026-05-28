@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Clock, TrendingUp, DollarSign } from 'lucide-react'
+import { Clock, TrendingUp } from 'lucide-react'
 import { getDayKey, getLast7Days, getLast12Months } from '../../utils/time'
 import { calcEarnings, formatCurrency } from '../../utils/currency'
 
@@ -257,9 +257,11 @@ export default function ReportsPage({ entries, projects, currency }) {
   const hoursYTD = hoursMs(yearStart)
 
   // ── time stats ──
-  const billableMs = completedEntries
-    .filter(e => e.billable && e.startTime >= weekStart)
-    .reduce((s, e) => s + (e.endTime - e.startTime), 0)
+  const daysWorkedThisWeek = new Set(
+    completedEntries
+      .filter(e => e.startTime >= weekStart)
+      .map(e => getDayKey(e.startTime))
+  ).size
 
   // ── 7-day time chart ──
   const days7 = getLast7Days()
@@ -359,10 +361,9 @@ export default function ReportsPage({ entries, projects, currency }) {
       </div>
 
       {/* ── Time stats ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
         <StatCard icon={Clock} label="Today" value={formatHours(hoursToday)} color="#c95da7" />
         <StatCard icon={TrendingUp} label="This week" value={formatHours(hoursWeek)} color="#4a9eff" />
-        <StatCard icon={DollarSign} label="Billable this week" value={formatHours(billableMs)} color="#34d399" />
       </div>
 
       {/* ── Existing charts ── */}

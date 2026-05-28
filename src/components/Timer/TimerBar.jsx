@@ -1,31 +1,28 @@
 import { useState, useEffect } from 'react'
-import { Play, Square, DollarSign, ChevronDown } from 'lucide-react'
+import { Play, Square, ChevronDown } from 'lucide-react'
 import { formatDuration } from '../../utils/time'
 import { calcLiveEarnings, formatCurrency } from '../../utils/currency'
 
 export default function TimerBar({ runningTimer, elapsed, projects, currency, startTimer, stopTimer }) {
   const [description, setDescription] = useState('')
   const [projectId, setProjectId] = useState(null)
-  const [billable, setBillable] = useState(false)
   const [showProjectPicker, setShowProjectPicker] = useState(false)
 
   useEffect(() => {
     if (runningTimer) {
       setDescription(runningTimer.description)
       setProjectId(runningTimer.projectId)
-      setBillable(runningTimer.billable)
     }
   }, [runningTimer])
 
   const handleStart = () => {
-    startTimer(description, projectId, [], billable)
+    startTimer(description, projectId, [])
   }
 
   const handleStop = () => {
     stopTimer()
     setDescription('')
     setProjectId(null)
-    setBillable(false)
   }
 
   const activeProject = projects.find(p => p.id === projectId)
@@ -99,17 +96,6 @@ export default function TimerBar({ runningTimer, elapsed, projects, currency, st
             </div>
           )}
         </div>
-
-        {/* Billable toggle */}
-        <button
-          onClick={() => setBillable(v => !v)}
-          className={`p-1.5 rounded-full transition-colors ${
-            billable ? 'text-[#c95da7] bg-[#c95da7]/10' : 'text-gray-400 hover:text-gray-600'
-          }`}
-          title="Billable"
-        >
-          <DollarSign size={16} />
-        </button>
 
         {/* Live timer + earnings */}
         {runningTimer && (
