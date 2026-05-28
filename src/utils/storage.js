@@ -2,6 +2,7 @@ const KEYS = {
   entries: 'tt_entries',
   projects: 'tt_projects',
   runningTimer: 'tt_running_timer',
+  currency: 'tt_currency',
 }
 
 export function loadEntries() {
@@ -52,6 +53,14 @@ function getDefaultProjects() {
     { id: 'p2', name: 'Development', color: '#4a9eff', client: '' },
     { id: 'p3', name: 'Meeting', color: '#f97316', client: '' },
   ]
+}
+
+export function loadCurrency() {
+  return localStorage.getItem(KEYS.currency) || '€'
+}
+
+export function saveCurrency(symbol) {
+  localStorage.setItem(KEYS.currency, symbol)
 }
 
 export function generateId() {

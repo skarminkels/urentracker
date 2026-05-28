@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
-import { Play, Square, DollarSign, Tag, ChevronDown } from 'lucide-react'
+import { Play, Square, DollarSign, ChevronDown } from 'lucide-react'
 import { formatDuration } from '../../utils/time'
+import { calcLiveEarnings, formatCurrency } from '../../utils/currency'
 
-export default function TimerBar({ runningTimer, elapsed, projects, startTimer, stopTimer }) {
+export default function TimerBar({ runningTimer, elapsed, projects, currency, startTimer, stopTimer }) {
   const [description, setDescription] = useState('')
   const [projectId, setProjectId] = useState(null)
   const [billable, setBillable] = useState(false)
@@ -28,6 +29,9 @@ export default function TimerBar({ runningTimer, elapsed, projects, startTimer, 
   }
 
   const activeProject = projects.find(p => p.id === projectId)
+  const liveEarnings = runningTimer
+    ? calcLiveEarnings(elapsed, runningTimer.projectId, projects)
+    : 0
 
   return (
     <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center gap-4 shadow-sm">
@@ -59,9 +63,7 @@ export default function TimerBar({ runningTimer, elapsed, projects, startTimer, 
           >
             {activeProject ? (
               <>
-                <span
-                  className="w-2 h-2 rounded-full bg-white/70"
-                />
+                <span className="w-2 h-2 rounded-full bg-white/70" />
                 {activeProject.name}
               </>
             ) : (
@@ -89,7 +91,9 @@ export default function TimerBar({ runningTimer, elapsed, projects, startTimer, 
                 >
                   <span className="w-2 h-2 rounded-full" style={{ backgroundColor: p.color }} />
                   {p.name}
-                  {p.client && <span className="text-gray-400 text-xs">{p.client}</span>}
+                  {p.hourlyRate > 0 && (
+                    <span className="ml-auto text-xs text-gray-400">{currency}{p.hourlyRate}/u</span>
+                  )}
                 </button>
               ))}
             </div>
@@ -107,11 +111,18 @@ export default function TimerBar({ runningTimer, elapsed, projects, startTimer, 
           <DollarSign size={16} />
         </button>
 
-        {/* Timer display */}
+        {/* Live timer + earnings */}
         {runningTimer && (
-          <span className="text-gray-700 font-mono text-base min-w-24 text-right">
-            {formatDuration(elapsed)}
-          </span>
+          <div className="text-right">
+            <div className="text-gray-700 font-mono text-base">
+              {formatDuration(elapsed)}
+            </div>
+            {liveEarnings > 0 && (
+              <div className="text-xs text-[#c95da7] font-medium">
+                {formatCurrency(liveEarnings, currency)}
+              </div>
+            )}
+          </div>
         )}
 
         {/* Start / Stop */}
@@ -132,12 +143,8 @@ export default function TimerBar({ runningTimer, elapsed, projects, startTimer, 
         )}
       </div>
 
-      {/* Close project picker on outside click */}
       {showProjectPicker && (
-        <div
-          className="fixed inset-0 z-40"
-          onClick={() => setShowProjectPicker(false)}
-        />
+        <div className="fixed inset-0 z-40" onClick={() => setShowProjectPicker(false)} />
       )}
     </div>
   )

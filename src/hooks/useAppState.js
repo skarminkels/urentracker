@@ -3,6 +3,7 @@ import {
   loadEntries, saveEntries,
   loadProjects, saveProjects,
   loadRunningTimer, saveRunningTimer,
+  loadCurrency, saveCurrency,
   generateId,
 } from '../utils/storage'
 
@@ -11,6 +12,7 @@ export function useAppState() {
   const [projects, setProjects] = useState(() => loadProjects())
   const [runningTimer, setRunningTimer] = useState(() => loadRunningTimer())
   const [elapsed, setElapsed] = useState(0)
+  const [currency, setCurrencyState] = useState(() => loadCurrency())
   const intervalRef = useRef(null)
 
   // Sync to localStorage
@@ -30,6 +32,16 @@ export function useAppState() {
     }
     return () => clearInterval(intervalRef.current)
   }, [runningTimer])
+
+  const setCurrency = useCallback((symbol) => {
+    saveCurrency(symbol)
+    setCurrencyState(symbol)
+  }, [])
+
+  const getRateSnapshot = useCallback((projectId) => {
+    const project = projects.find(p => p.id === projectId)
+    return project?.hourlyRate ?? 0
+  }, [projects])
 
   const startTimer = useCallback((description, projectId, tags, billable) => {
     const timer = {
@@ -52,13 +64,13 @@ export function useAppState() {
       billable: runningTimer.billable,
       startTime: runningTimer.startTime,
       endTime: Date.now(),
+      rateAtTimeOfEntry: getRateSnapshot(runningTimer.projectId),
     }
     setEntries(prev => [entry, ...prev])
     setRunningTimer(null)
-  }, [runningTimer])
+  }, [runningTimer, getRateSnapshot])
 
   const continueEntry = useCallback((entry) => {
-    // Stop current timer if running
     if (runningTimer) {
       const stoppedEntry = {
         id: generateId(),
@@ -68,6 +80,7 @@ export function useAppState() {
         billable: runningTimer.billable,
         startTime: runningTimer.startTime,
         endTime: Date.now(),
+        rateAtTimeOfEntry: getRateSnapshot(runningTimer.projectId),
       }
       setEntries(prev => [stoppedEntry, ...prev])
     }
@@ -79,19 +92,32 @@ export function useAppState() {
       startTime: Date.now(),
     }
     setRunningTimer(timer)
-  }, [runningTimer])
+  }, [runningTimer, getRateSnapshot])
 
   const deleteEntry = useCallback((id) => {
     setEntries(prev => prev.filter(e => e.id !== id))
   }, [])
 
   const updateEntry = useCallback((id, updates) => {
-    setEntries(prev => prev.map(e => e.id === id ? { ...e, ...updates } : e))
-  }, [])
+    setEntries(prev => prev.map(e => {
+      if (e.id !== id) return e
+      const updated = { ...e, ...updates }
+      // Refresh rate snapshot if project was explicitly changed
+      if ('projectId' in updates) {
+        const project = projects.find(p => p.id === updates.projectId)
+        updated.rateAtTimeOfEntry = project?.hourlyRate ?? 0
+      }
+      return updated
+    }))
+  }, [projects])
 
   const addManualEntry = useCallback((entry) => {
-    setEntries(prev => [{ id: generateId(), ...entry }, ...prev].sort((a, b) => b.startTime - a.startTime))
-  }, [])
+    const rateAtTimeOfEntry = getRateSnapshot(entry.projectId)
+    setEntries(prev =>
+      [{ id: generateId(), rateAtTimeOfEntry, ...entry }, ...prev]
+        .sort((a, b) => b.startTime - a.startTime)
+    )
+  }, [getRateSnapshot])
 
   const addProject = useCallback((project) => {
     setProjects(prev => [...prev, { id: generateId(), ...project }])
@@ -111,6 +137,8 @@ export function useAppState() {
     projects,
     runningTimer,
     elapsed,
+    currency,
+    setCurrency,
     startTimer,
     stopTimer,
     continueEntry,

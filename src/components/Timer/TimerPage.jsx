@@ -10,6 +10,7 @@ export default function TimerPage({
   projects,
   runningTimer,
   elapsed,
+  currency,
   startTimer,
   stopTimer,
   continueEntry,
@@ -26,6 +27,7 @@ export default function TimerPage({
         runningTimer={runningTimer}
         elapsed={elapsed}
         projects={projects}
+        currency={currency}
         startTimer={startTimer}
         stopTimer={stopTimer}
       />
@@ -53,6 +55,7 @@ export default function TimerPage({
               key={group.key}
               group={group}
               projects={projects}
+              currency={currency}
               onContinue={continueEntry}
               onDelete={deleteEntry}
               onUpdate={updateEntry}

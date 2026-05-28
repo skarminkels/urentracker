@@ -20,6 +20,7 @@ export default function App() {
             projects={state.projects}
             runningTimer={state.runningTimer}
             elapsed={state.elapsed}
+            currency={state.currency}
             startTimer={state.startTimer}
             stopTimer={state.stopTimer}
             continueEntry={state.continueEntry}
@@ -32,12 +33,15 @@ export default function App() {
           <ReportsPage
             entries={state.entries}
             projects={state.projects}
+            currency={state.currency}
           />
         )}
         {page === 'projects' && (
           <ProjectsPage
             projects={state.projects}
             entries={state.entries}
+            currency={state.currency}
+            setCurrency={state.setCurrency}
             addProject={state.addProject}
             updateProject={state.updateProject}
             deleteProject={state.deleteProject}

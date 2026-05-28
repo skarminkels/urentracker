@@ -6,15 +6,32 @@ const PRESET_COLORS = [
   '#ef4444', '#a78bfa', '#fbbf24', '#06b6d4', '#84cc16',
 ]
 
-export default function ProjectModal({ project, onSave, onClose }) {
+export default function ProjectModal({ project, currency, onSave, onClose }) {
   const [name, setName] = useState(project?.name || '')
   const [color, setColor] = useState(project?.color || PRESET_COLORS[0])
   const [client, setClient] = useState(project?.client || '')
+  const [hourlyRate, setHourlyRate] = useState(
+    project?.hourlyRate ? String(project.hourlyRate) : ''
+  )
+  const [rateError, setRateError] = useState('')
 
   const handleSubmit = (e) => {
     e.preventDefault()
+    setRateError('')
+
+    const rate = hourlyRate === '' ? 0 : parseFloat(hourlyRate.replace(',', '.'))
+    if (hourlyRate !== '' && (isNaN(rate) || rate < 0)) {
+      setRateError('Enter a valid rate (≥ 0).')
+      return
+    }
     if (!name.trim()) return
-    onSave({ name: name.trim(), color, client: client.trim() })
+
+    onSave({
+      name: name.trim(),
+      color,
+      client: client.trim(),
+      hourlyRate: rate || 0,
+    })
     onClose()
   }
 
@@ -67,6 +84,30 @@ export default function ProjectModal({ project, onSave, onClose }) {
               placeholder="e.g. Acme Corp"
               className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-[#c95da7] transition-colors"
             />
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-gray-500 mb-1.5">
+              Hourly rate (optional)
+            </label>
+            <div className="flex items-center gap-0">
+              <span className="inline-flex items-center px-3.5 py-3 bg-gray-50 border border-r-0 border-gray-200 rounded-l-xl text-sm text-gray-500 font-medium">
+                {currency}/u
+              </span>
+              <input
+                type="number"
+                value={hourlyRate}
+                onChange={e => {
+                  setRateError('')
+                  setHourlyRate(e.target.value)
+                }}
+                placeholder="0"
+                min="0"
+                step="0.01"
+                className="flex-1 px-4 py-3 rounded-r-xl border border-gray-200 text-sm outline-none focus:border-[#c95da7] transition-colors"
+              />
+            </div>
+            {rateError && <p className="text-red-500 text-xs mt-1">{rateError}</p>}
           </div>
 
           <div className="flex gap-3 pt-2">
