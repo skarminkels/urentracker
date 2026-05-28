@@ -225,6 +225,76 @@ function EarningsProjectChart({ slices, currency }) {
   )
 }
 
+function HourCapSection({ projects, entries }) {
+  const now = new Date()
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).getTime()
+  const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 1).getTime()
+
+  const hoursPerProject = {}
+  for (const entry of entries) {
+    if (!entry.endTime) continue
+    if (entry.endTime < monthStart || entry.endTime >= monthEnd) continue
+    const project = projects.find(p => p.id === entry.projectId)
+    const rate = entry.rateAtTimeOfEntry !== undefined
+      ? entry.rateAtTimeOfEntry
+      : (project?.hourlyRate ?? 0)
+    if (rate <= 0) continue
+    const key = entry.projectId || '__none__'
+    hoursPerProject[key] = (hoursPerProject[key] || 0) + (entry.endTime - entry.startTime) / 3600000
+  }
+
+  const rows = projects
+    .filter(p => hoursPerProject[p.id] > 0 || (p.maxHoursPerMonth > 0))
+    .map(p => ({ project: p, hours: hoursPerProject[p.id] || 0, max: p.maxHoursPerMonth || 0 }))
+
+  if (rows.length === 0) return null
+
+  const fmtH = (h) => h.toFixed(1).replace('.', ',')
+
+  return (
+    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-4">
+      <h2 className="text-sm font-semibold text-gray-700 mb-4">Uren deze maand per project</h2>
+      <div className="space-y-4">
+        {rows.map(({ project, hours, max }) => {
+          const pct = max > 0 ? (hours / max) * 100 : 0
+          const barColor = pct >= 100 ? '#ef4444' : pct >= 80 ? '#f97316' : project.color
+          const overLimit = max > 0 && hours > max
+
+          return (
+            <div key={project.id}>
+              <div className="flex items-center justify-between mb-1.5">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: project.color }} />
+                  <span className="text-sm text-gray-700 truncate">{project.name}</span>
+                  {project.client && (
+                    <span className="text-xs text-gray-400 truncate hidden sm:inline">{project.client}</span>
+                  )}
+                </div>
+                <div className="flex items-center gap-2 shrink-0 ml-3">
+                  {overLimit && (
+                    <span className="text-xs text-red-500 font-medium whitespace-nowrap">⚠ limiet overschreden</span>
+                  )}
+                  <span className="text-sm text-gray-600 font-mono whitespace-nowrap">
+                    {max > 0 ? `${fmtH(hours)} / ${fmtH(max)} u` : `${fmtH(hours)} u`}
+                  </span>
+                </div>
+              </div>
+              {max > 0 && (
+                <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                  <div
+                    className="h-full rounded-full transition-all duration-300"
+                    style={{ width: `${Math.min(pct, 100)}%`, backgroundColor: barColor }}
+                  />
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
 // ─── main component ────────────────────────────────────────────────────────────
 
 export default function ReportsPage({ entries, projects, currency }) {
@@ -365,6 +435,9 @@ export default function ReportsPage({ entries, projects, currency }) {
         <StatCard icon={Clock} label="Today" value={formatHours(hoursToday)} color="#c95da7" />
         <StatCard icon={TrendingUp} label="This week" value={formatHours(hoursWeek)} color="#4a9eff" />
       </div>
+
+      {/* ── Hour cap progress ── */}
+      <HourCapSection projects={projects} entries={completedEntries} />
 
       {/* ── Existing charts ── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">

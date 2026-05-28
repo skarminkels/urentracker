@@ -10,8 +10,13 @@ export default function ProjectModal({ project, currency, onSave, onClose }) {
   const [name, setName] = useState(project?.name || '')
   const [color, setColor] = useState(project?.color || PRESET_COLORS[0])
   const [client, setClient] = useState(project?.client || '')
+  const [clientAddress, setClientAddress] = useState(project?.clientAddress || '')
+  const [clientVAT, setClientVAT] = useState(project?.clientVAT || '')
   const [hourlyRate, setHourlyRate] = useState(
     project?.hourlyRate ? String(project.hourlyRate) : ''
+  )
+  const [maxHoursPerMonth, setMaxHoursPerMonth] = useState(
+    project?.maxHoursPerMonth ? String(project.maxHoursPerMonth) : ''
   )
   const [rateError, setRateError] = useState('')
 
@@ -30,14 +35,17 @@ export default function ProjectModal({ project, currency, onSave, onClose }) {
       name: name.trim(),
       color,
       client: client.trim(),
+      clientAddress: clientAddress.trim(),
+      clientVAT: clientVAT.trim(),
       hourlyRate: rate || 0,
+      maxHoursPerMonth: parseFloat(maxHoursPerMonth) || 0,
     })
     onClose()
   }
 
   return (
     <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm">
+      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between p-6 border-b border-gray-100">
           <h2 className="text-lg font-semibold text-gray-900">
             {project ? 'Edit project' : 'New project'}
@@ -87,6 +95,28 @@ export default function ProjectModal({ project, currency, onSave, onClose }) {
           </div>
 
           <div>
+            <label className="block text-xs font-medium text-gray-500 mb-1.5">Adres klant (optioneel)</label>
+            <textarea
+              rows={3}
+              value={clientAddress}
+              onChange={e => setClientAddress(e.target.value)}
+              placeholder={"Straat 1\n1000 Brussel"}
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-[#c95da7] transition-colors resize-none"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-gray-500 mb-1.5">BTW-nummer klant (optioneel)</label>
+            <input
+              type="text"
+              value={clientVAT}
+              onChange={e => setClientVAT(e.target.value)}
+              placeholder="BE 0123.456.789"
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-[#c95da7] transition-colors"
+            />
+          </div>
+
+          <div>
             <label className="block text-xs font-medium text-gray-500 mb-1.5">
               Hourly rate (optional)
             </label>
@@ -108,6 +138,21 @@ export default function ProjectModal({ project, currency, onSave, onClose }) {
               />
             </div>
             {rateError && <p className="text-red-500 text-xs mt-1">{rateError}</p>}
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-gray-500 mb-1.5">
+              Max uren per maand (optioneel)
+            </label>
+            <input
+              type="number"
+              value={maxHoursPerMonth}
+              onChange={e => setMaxHoursPerMonth(e.target.value)}
+              placeholder="bv. 6 — laat leeg voor geen limiet"
+              min="0"
+              step="0.5"
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-[#c95da7] transition-colors"
+            />
           </div>
 
           <div className="flex gap-3 pt-2">

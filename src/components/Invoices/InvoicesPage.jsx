@@ -100,11 +100,25 @@ function buildPDF(invoiceNumber, settings, project, groupEntries, projects) {
 
   // ── CLIENT (right) ───────────────────────────────────────
   const clientName = project?.client || project?.name || 'Onbekende klant'
+  const clientAddressLines = project?.clientAddress
+    ? project.clientAddress.split('\n').map(l => l.trim()).filter(Boolean)
+    : []
+  const clientVAT = project?.clientVAT || ''
+
   doc.setFont('helvetica', 'bold')
   doc.setFontSize(9)
   doc.text('Klant:', R, 43, { align: 'right' })
   doc.setFont('helvetica', 'normal')
-  doc.text(trunc(clientName, 40), R, 49, { align: 'right' })
+  let clientY = 49
+  doc.text(trunc(clientName, 40), R, clientY, { align: 'right' })
+  for (const line of clientAddressLines) {
+    clientY += 5.5
+    doc.text(trunc(line, 40), R, clientY, { align: 'right' })
+  }
+  if (clientVAT) {
+    clientY += 5.5
+    doc.text(trunc(clientVAT, 40), R, clientY, { align: 'right' })
+  }
 
   // ── TABLE ────────────────────────────────────────────────
   const tableY = 78
