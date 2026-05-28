@@ -33,7 +33,7 @@ function EntryForm({ initial = {}, onSave, onCancel }) {
   if (clients.length === 0) {
     return (
       <div className="text-center py-4">
-        <p className="text-sm text-slate-500">Voeg eerst een klant toe voordat je uren kan loggen.</p>
+        <p className="text-sm text-ink-secondary">Voeg eerst een klant toe voordat je uren kan loggen.</p>
         <Button variant="secondary" onClick={onCancel} className="mt-4">Sluiten</Button>
       </div>
     )
@@ -97,13 +97,13 @@ export default function UrenLoggen() {
         ) : (
           <Card>
             <table className="w-full">
-              <thead className="bg-slate-50">
-                <tr className="border-b border-slate-100">
-                  <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">Datum</th>
-                  <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">Klant</th>
-                  <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">Omschrijving</th>
-                  <th className="text-right px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">Uren</th>
-                  <th className="text-right px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">Bedrag</th>
+              <thead className="bg-canvas">
+                <tr className="border-b border-bdr">
+                  <th className="text-left px-6 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wide">Datum</th>
+                  <th className="text-left px-6 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wide">Klant</th>
+                  <th className="text-left px-6 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wide">Omschrijving</th>
+                  <th className="text-right px-6 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wide">Uren</th>
+                  <th className="text-right px-6 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wide">Bedrag</th>
                   <th className="px-6 py-3"></th>
                 </tr>
               </thead>
@@ -111,15 +111,15 @@ export default function UrenLoggen() {
                 {sorted.map((entry, i) => {
                   const client = clientMap[entry.clientId]
                   return (
-                    <tr key={entry.id} className={`${i > 0 ? 'border-t border-slate-100' : ''} hover:bg-blue-50/40 transition-colors duration-150`}>
-                      <td className="px-6 py-4 text-sm text-slate-600 whitespace-nowrap">{formatDate(entry.date)}</td>
+                    <tr key={entry.id} className={`${i > 0 ? 'border-t border-bdr' : ''} hover:bg-surface-hover transition-colors duration-150`}>
+                      <td className="px-6 py-4 text-sm text-ink-secondary whitespace-nowrap">{formatDate(entry.date)}</td>
                       <td className="px-6 py-4">
-                        <span className="text-sm font-medium text-slate-800">{client?.name || '(verwijderd)'}</span>
-                        {client?.company && <span className="text-xs text-slate-400 ml-1.5">{client.company}</span>}
+                        <span className="text-sm font-medium text-ink-primary">{client?.name || '(verwijderd)'}</span>
+                        {client?.company && <span className="text-xs text-ink-muted ml-1.5">{client.company}</span>}
                       </td>
-                      <td className="px-6 py-4 text-sm text-slate-500 max-w-xs truncate">{entry.description || '—'}</td>
-                      <td className="px-6 py-4 text-right font-mono text-sm text-slate-600">{entry.hours}u</td>
-                      <td className="px-6 py-4 text-right font-mono text-sm font-semibold text-slate-800">{formatAmount(entry)}</td>
+                      <td className="px-6 py-4 text-sm text-ink-secondary max-w-xs truncate">{entry.description || '—'}</td>
+                      <td className="px-6 py-4 text-right font-mono text-sm text-ink-secondary">{entry.hours}u</td>
+                      <td className="px-6 py-4 text-right font-mono text-sm font-semibold text-ink-primary">{formatAmount(entry)}</td>
                       <td className="px-6 py-4">
                         <div className="flex gap-1.5 justify-end">
                           <Button size="sm" variant="ghost" onClick={() => setModal({ type: 'edit', entry })}>
@@ -147,7 +147,7 @@ export default function UrenLoggen() {
 
       {deleteConfirm && (
         <Modal title="Registratie verwijderen" onClose={() => setDeleteConfirm(null)}>
-          <p className="text-sm text-slate-600 mb-5">
+          <p className="text-sm text-ink-secondary mb-5">
             Weet je zeker dat je deze registratie van <strong>{deleteConfirm.hours}u</strong> op {formatDate(deleteConfirm.date)} wil verwijderen?
           </p>
           <div className="flex gap-2 justify-end">

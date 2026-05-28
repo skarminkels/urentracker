@@ -25,7 +25,7 @@ function App() {
     <DataProvider>
       <div className="flex min-h-screen">
         <Sidebar active={page} onNavigate={setPage} />
-        <main className="flex-1 overflow-auto bg-slate-50">
+        <main className="flex-1 overflow-auto bg-canvas">
           <Page />
         </main>
       </div>

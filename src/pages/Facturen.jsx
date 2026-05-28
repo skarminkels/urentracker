@@ -80,6 +80,8 @@ function InvoiceList({ onCreate, onDetail }) {
     generateFactuurPdf({ invoice: inv, client, settings })
   }
 
+  const selectCls = 'border border-bdr rounded-md px-3 py-2 text-sm bg-surface text-ink-secondary focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand transition-all duration-150'
+
   return (
     <>
       <PageHeader
@@ -92,19 +94,11 @@ function InvoiceList({ onCreate, onDetail }) {
       <div className="p-8">
         {invoices.length > 0 && (
           <div className="flex gap-3 mb-4">
-            <select
-              value={filterClient}
-              onChange={e => setFilterClient(e.target.value)}
-              className="border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-            >
+            <select value={filterClient} onChange={e => setFilterClient(e.target.value)} className={selectCls}>
               <option value="">Alle klanten</option>
               {clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
-            <select
-              value={filterStatus}
-              onChange={e => setFilterStatus(e.target.value)}
-              className="border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-            >
+            <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} className={selectCls}>
               <option value="">Alle statussen</option>
               <option value="concept">Concept</option>
               <option value="verstuurd">Verstuurd</option>
@@ -119,18 +113,18 @@ function InvoiceList({ onCreate, onDetail }) {
           </Card>
         ) : filtered.length === 0 ? (
           <Card className="p-8 text-center">
-            <p className="text-slate-500 text-sm">Geen facturen gevonden voor deze filters.</p>
+            <p className="text-ink-secondary text-sm">Geen facturen gevonden voor deze filters.</p>
           </Card>
         ) : (
           <Card>
             <table className="w-full">
-              <thead className="bg-slate-50">
-                <tr className="border-b border-slate-100">
-                  <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">Nr</th>
-                  <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">Klant</th>
-                  <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">Periode</th>
-                  <th className="text-right px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">Bedrag</th>
-                  <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">Status</th>
+              <thead className="bg-canvas">
+                <tr className="border-b border-bdr">
+                  <th className="text-left px-6 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wide">Nr</th>
+                  <th className="text-left px-6 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wide">Klant</th>
+                  <th className="text-left px-6 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wide">Periode</th>
+                  <th className="text-right px-6 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wide">Bedrag</th>
+                  <th className="text-left px-6 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wide">Status</th>
                   <th className="px-6 py-3"></th>
                 </tr>
               </thead>
@@ -140,16 +134,16 @@ function InvoiceList({ onCreate, onDetail }) {
                   return (
                     <tr
                       key={inv.id}
-                      className={`${i > 0 ? 'border-t border-slate-100' : ''} hover:bg-blue-50/40 transition-colors duration-150 cursor-pointer`}
+                      className={`${i > 0 ? 'border-t border-bdr' : ''} hover:bg-surface-hover transition-colors duration-150 cursor-pointer`}
                       onClick={() => onDetail(inv.id)}
                     >
-                      <td className="px-6 py-4 font-mono text-sm font-medium text-slate-700">{inv.number}</td>
+                      <td className="px-6 py-4 font-mono text-sm font-medium text-ink-primary">{inv.number}</td>
                       <td className="px-6 py-4">
-                        <span className="text-sm font-medium text-slate-800">{client?.name || '(verwijderd)'}</span>
-                        {client?.company && <span className="text-xs text-slate-400 ml-1.5">{client.company}</span>}
+                        <span className="text-sm font-medium text-ink-primary">{client?.name || '(verwijderd)'}</span>
+                        {client?.company && <span className="text-xs text-ink-muted ml-1.5">{client.company}</span>}
                       </td>
-                      <td className="px-6 py-4 text-sm text-slate-600">{monthLabel(inv.monthKey)}</td>
-                      <td className="px-6 py-4 text-right font-mono text-sm font-semibold text-slate-800">{fmt(inv.totalAmount)}</td>
+                      <td className="px-6 py-4 text-sm text-ink-secondary">{monthLabel(inv.monthKey)}</td>
+                      <td className="px-6 py-4 text-right font-mono text-sm font-semibold text-ink-primary">{fmt(inv.totalAmount)}</td>
                       <td className="px-6 py-4">
                         <Badge color={STATUS_COLOR[inv.status]}>{STATUS_LABEL[inv.status]}</Badge>
                       </td>
@@ -184,7 +178,7 @@ function InvoiceList({ onCreate, onDetail }) {
 
       {deleteTarget && (
         <Modal title="Factuur verwijderen" onClose={() => setDeleteTarget(null)}>
-          <p className="text-sm text-slate-600 mb-5">
+          <p className="text-sm text-ink-secondary mb-5">
             Weet je zeker dat je factuur <strong>{deleteTarget.number}</strong> wil verwijderen?
           </p>
           <div className="flex gap-2 justify-end">
@@ -213,9 +207,7 @@ function CreateInvoice({ onBack, onCreated }) {
 
   const preview = useMemo(() => {
     if (!clientId || !monthKey || !client) return null
-    const monthEntries = entries.filter(
-      e => e.clientId === clientId && e.date.startsWith(monthKey),
-    )
+    const monthEntries = entries.filter(e => e.clientId === clientId && e.date.startsWith(monthKey))
     if (monthEntries.length === 0) return null
     const lineItems = buildLineItems(monthEntries, client.rate, grouping)
     const totalAmount = lineItems.reduce((s, li) => s + li.total, 0)
@@ -228,14 +220,12 @@ function CreateInvoice({ onBack, onCreated }) {
     if (!preview || !client) return
     const today = new Date().toISOString().slice(0, 10)
     const created = addInvoice({
-      clientId,
-      monthKey,
+      clientId, monthKey,
       lineItems: preview.lineItems,
       totalAmount: preview.totalAmount,
       dateIssued: today,
       status: 'concept',
-      notes,
-      grouping,
+      notes, grouping,
     })
     onCreated(created.id)
   }
@@ -254,7 +244,7 @@ function CreateInvoice({ onBack, onCreated }) {
       <div className="p-8 max-w-2xl">
         <div className="flex flex-col gap-5">
           <Card className="p-6">
-            <h3 className="text-sm font-semibold text-slate-700 mb-4">Factuurgegevens</h3>
+            <h3 className="text-sm font-semibold text-ink-primary mb-4">Factuurgegevens</h3>
             <div className="grid grid-cols-2 gap-4">
               <Select label="Klant" value={clientId} onChange={e => setClientId(e.target.value)}>
                 {clients.length === 0 && <option value="">Geen klanten</option>}
@@ -264,21 +254,17 @@ function CreateInvoice({ onBack, onCreated }) {
             </div>
 
             <div className="mt-4">
-              <p className="text-sm font-medium text-slate-700 mb-2">Groepering regelitems</p>
+              <p className="text-sm font-medium text-ink-primary mb-2">Groepering regelitems</p>
               <div className="flex gap-4">
                 {[
                   { value: 'per-description', label: 'Per omschrijving', desc: 'Gelijke omschrijvingen samenvoegen' },
                   { value: 'per-entry', label: 'Per registratie', desc: 'Elke urenregistratie als aparte regel' },
                 ].map(opt => (
                   <label key={opt.value} className="flex items-start gap-2 cursor-pointer">
-                    <input
-                      type="radio" name="grouping" value={opt.value}
-                      checked={grouping === opt.value} onChange={() => setGrouping(opt.value)}
-                      className="mt-0.5"
-                    />
+                    <input type="radio" name="grouping" value={opt.value} checked={grouping === opt.value} onChange={() => setGrouping(opt.value)} className="mt-0.5" />
                     <div>
-                      <p className="text-sm font-medium text-slate-700">{opt.label}</p>
-                      <p className="text-xs text-slate-400">{opt.desc}</p>
+                      <p className="text-sm font-medium text-ink-primary">{opt.label}</p>
+                      <p className="text-xs text-ink-muted">{opt.desc}</p>
                     </div>
                   </label>
                 ))}
@@ -292,55 +278,50 @@ function CreateInvoice({ onBack, onCreated }) {
 
           {clientId && monthKey && (
             <Card className="p-6">
-              <h3 className="text-sm font-semibold text-slate-700 mb-3">Voorvertoning regelitems</h3>
-
+              <h3 className="text-sm font-semibold text-ink-primary mb-3">Voorvertoning regelitems</h3>
               {duplicate && (
                 <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 mb-4">
-                  <p className="text-sm text-amber-700">
-                    ⚠ Er bestaat al een factuur ({duplicate.number}) voor deze klant en periode.
-                  </p>
+                  <p className="text-sm text-amber-700">⚠ Er bestaat al een factuur ({duplicate.number}) voor deze klant en periode.</p>
                 </div>
               )}
-
               {!preview ? (
-                <p className="text-sm text-slate-400 italic">
+                <p className="text-sm text-ink-muted italic">
                   Geen uren gevonden voor {client?.name || '...'} in {monthKey ? monthLabel(monthKey) : '...'}.
                 </p>
               ) : (
                 <>
                   <table className="w-full mb-4">
-                    <thead className="bg-slate-50">
-                      <tr className="border-b border-slate-100">
-                        <th className="text-left py-2 text-xs font-medium text-slate-500 uppercase tracking-wide">Omschrijving</th>
-                        <th className="text-right py-2 text-xs font-medium text-slate-500 uppercase tracking-wide w-16">Uren</th>
-                        <th className="text-right py-2 text-xs font-medium text-slate-500 uppercase tracking-wide w-24">Uurtarief</th>
-                        <th className="text-right py-2 text-xs font-medium text-slate-500 uppercase tracking-wide w-24">Totaal</th>
+                    <thead className="bg-canvas">
+                      <tr className="border-b border-bdr">
+                        <th className="text-left py-2 text-xs font-semibold text-ink-muted uppercase tracking-wide">Omschrijving</th>
+                        <th className="text-right py-2 text-xs font-semibold text-ink-muted uppercase tracking-wide w-16">Uren</th>
+                        <th className="text-right py-2 text-xs font-semibold text-ink-muted uppercase tracking-wide w-24">Uurtarief</th>
+                        <th className="text-right py-2 text-xs font-semibold text-ink-muted uppercase tracking-wide w-24">Totaal</th>
                       </tr>
                     </thead>
                     <tbody>
                       {preview.lineItems.map((li, i) => (
-                        <tr key={i} className={i > 0 ? 'border-t border-slate-100' : ''}>
-                          <td className="py-2 text-sm text-slate-700">{li.description}</td>
-                          <td className="py-2 text-right font-mono text-sm text-slate-500">{li.hours}u</td>
-                          <td className="py-2 text-right font-mono text-sm text-slate-500">{fmt(li.rate)}</td>
-                          <td className="py-2 text-right font-mono text-sm font-medium text-slate-700">{fmt(li.total)}</td>
+                        <tr key={i} className={i > 0 ? 'border-t border-bdr' : ''}>
+                          <td className="py-2 text-sm text-ink-primary">{li.description}</td>
+                          <td className="py-2 text-right font-mono text-sm text-ink-secondary">{li.hours}u</td>
+                          <td className="py-2 text-right font-mono text-sm text-ink-secondary">{fmt(li.rate)}</td>
+                          <td className="py-2 text-right font-mono text-sm font-medium text-ink-primary">{fmt(li.total)}</td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
-
-                  <div className="border-t border-slate-200 pt-3 text-right space-y-1">
-                    <div className="flex justify-end gap-8 text-sm text-slate-500">
+                  <div className="border-t border-bdr pt-3 text-right space-y-1">
+                    <div className="flex justify-end gap-8 text-sm text-ink-secondary">
                       <span>Subtotaal</span>
                       <span className="font-mono w-24 text-right">{fmt(preview.totalAmount)}</span>
                     </div>
                     {btwEnabled && (
-                      <div className="flex justify-end gap-8 text-sm text-slate-500">
+                      <div className="flex justify-end gap-8 text-sm text-ink-secondary">
                         <span>BTW {btwRate}%</span>
                         <span className="font-mono w-24 text-right">{fmt(btwAmount)}</span>
                       </div>
                     )}
-                    <div className="flex justify-end gap-8 text-sm font-bold text-slate-800">
+                    <div className="flex justify-end gap-8 text-sm font-bold text-ink-primary">
                       <span>Totaal</span>
                       <span className="font-mono w-24 text-right">{fmt(grandTotal)}</span>
                     </div>
@@ -352,9 +333,7 @@ function CreateInvoice({ onBack, onCreated }) {
 
           <div className="flex gap-3">
             <Button variant="secondary" onClick={onBack}>Annuleren</Button>
-            <Button onClick={handleCreate} disabled={!preview || clients.length === 0}>
-              Factuur aanmaken
-            </Button>
+            <Button onClick={handleCreate} disabled={!preview || clients.length === 0}>Factuur aanmaken</Button>
           </div>
         </div>
       </div>
@@ -378,7 +357,7 @@ function InvoiceDetail({ invoiceId, onBack }) {
           <Button variant="secondary" onClick={onBack}><ArrowLeft size={15} /> Terug</Button>
         </PageHeader>
         <div className="p-8">
-          <p className="text-slate-500 text-sm">Factuur niet gevonden.</p>
+          <p className="text-ink-secondary text-sm">Factuur niet gevonden.</p>
         </div>
       </>
     )
@@ -413,55 +392,55 @@ function InvoiceDetail({ invoiceId, onBack }) {
           <Card className="p-5">
             <div className="grid grid-cols-3 gap-4 text-sm">
               <div>
-                <p className="text-xs text-slate-400 mb-0.5">Klant</p>
-                <p className="font-medium text-slate-800">{client?.name || '(verwijderd)'}</p>
-                {client?.company && <p className="text-slate-500 text-xs">{client.company}</p>}
+                <p className="text-xs text-ink-muted mb-0.5">Klant</p>
+                <p className="font-medium text-ink-primary">{client?.name || '(verwijderd)'}</p>
+                {client?.company && <p className="text-ink-secondary text-xs">{client.company}</p>}
               </div>
               <div>
-                <p className="text-xs text-slate-400 mb-0.5">Periode</p>
-                <p className="font-medium text-slate-800">{monthLabel(invoice.monthKey)}</p>
+                <p className="text-xs text-ink-muted mb-0.5">Periode</p>
+                <p className="font-medium text-ink-primary">{monthLabel(invoice.monthKey)}</p>
               </div>
               <div>
-                <p className="text-xs text-slate-400 mb-0.5">Datum</p>
-                <p className="font-medium text-slate-800">{fmtDateBE(invoice.dateIssued)}</p>
+                <p className="text-xs text-ink-muted mb-0.5">Datum</p>
+                <p className="font-medium text-ink-primary">{fmtDateBE(invoice.dateIssued)}</p>
               </div>
             </div>
           </Card>
 
           <Card>
-            <div className="px-6 py-4 border-b border-slate-100">
-              <h3 className="text-sm font-semibold text-slate-700">Regelitems</h3>
+            <div className="px-6 py-4 border-b border-bdr">
+              <h3 className="text-sm font-semibold text-ink-primary">Regelitems</h3>
             </div>
             <table className="w-full">
-              <thead className="bg-slate-50">
-                <tr className="border-b border-slate-100">
-                  <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">Omschrijving</th>
-                  <th className="text-right px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">Uren</th>
-                  <th className="text-right px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">Uurtarief</th>
-                  <th className="text-right px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">Totaal</th>
+              <thead className="bg-canvas">
+                <tr className="border-b border-bdr">
+                  <th className="text-left px-6 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wide">Omschrijving</th>
+                  <th className="text-right px-6 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wide">Uren</th>
+                  <th className="text-right px-6 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wide">Uurtarief</th>
+                  <th className="text-right px-6 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wide">Totaal</th>
                 </tr>
               </thead>
               <tbody>
                 {invoice.lineItems.map((li, i) => (
-                  <tr key={i} className={i > 0 ? 'border-t border-slate-100' : ''}>
-                    <td className="px-6 py-3.5 text-sm text-slate-700">{li.description}</td>
-                    <td className="px-6 py-3.5 text-right font-mono text-sm text-slate-500">{li.hours}u</td>
-                    <td className="px-6 py-3.5 text-right font-mono text-sm text-slate-500">{fmt(li.rate)}</td>
-                    <td className="px-6 py-3.5 text-right font-mono text-sm font-medium text-slate-700">{fmt(li.total)}</td>
+                  <tr key={i} className={i > 0 ? 'border-t border-bdr' : ''}>
+                    <td className="px-6 py-3.5 text-sm text-ink-primary">{li.description}</td>
+                    <td className="px-6 py-3.5 text-right font-mono text-sm text-ink-secondary">{li.hours}u</td>
+                    <td className="px-6 py-3.5 text-right font-mono text-sm text-ink-secondary">{fmt(li.rate)}</td>
+                    <td className="px-6 py-3.5 text-right font-mono text-sm font-medium text-ink-primary">{fmt(li.total)}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
-            <div className="px-6 py-4 border-t border-slate-100 space-y-1.5">
-              <div className="flex justify-between text-sm text-slate-500">
+            <div className="px-6 py-4 border-t border-bdr space-y-1.5">
+              <div className="flex justify-between text-sm text-ink-secondary">
                 <span>Subtotaal</span><span className="font-mono">{fmt(invoice.totalAmount)}</span>
               </div>
               {btwEnabled && (
-                <div className="flex justify-between text-sm text-slate-500">
+                <div className="flex justify-between text-sm text-ink-secondary">
                   <span>BTW {btwRate}%</span><span className="font-mono">{fmt(btwAmount)}</span>
                 </div>
               )}
-              <div className="flex justify-between text-sm font-bold text-slate-800 pt-1 border-t border-slate-100">
+              <div className="flex justify-between text-sm font-bold text-ink-primary pt-1 border-t border-bdr">
                 <span>Totaal</span><span className="font-mono">{fmt(grandTotal)}</span>
               </div>
             </div>
@@ -503,7 +482,7 @@ function InvoiceDetail({ invoiceId, onBack }) {
 
       {deleteConfirm && (
         <Modal title="Factuur verwijderen" onClose={() => setDeleteConfirm(false)}>
-          <p className="text-sm text-slate-600 mb-5">
+          <p className="text-sm text-ink-secondary mb-5">
             Weet je zeker dat je factuur <strong>{invoice.number}</strong> wil verwijderen?
           </p>
           <div className="flex gap-2 justify-end">

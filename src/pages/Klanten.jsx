@@ -68,20 +68,20 @@ export default function Klanten() {
         ) : (
           <Card>
             <table className="w-full">
-              <thead className="bg-slate-50">
-                <tr className="border-b border-slate-100">
-                  <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">Naam</th>
-                  <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">Bedrijf</th>
-                  <th className="text-right px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">Uurtarief</th>
+              <thead className="bg-canvas">
+                <tr className="border-b border-bdr">
+                  <th className="text-left px-6 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wide">Naam</th>
+                  <th className="text-left px-6 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wide">Bedrijf</th>
+                  <th className="text-right px-6 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wide">Uurtarief</th>
                   <th className="px-6 py-3"></th>
                 </tr>
               </thead>
               <tbody>
                 {clients.map((client, i) => (
-                  <tr key={client.id} className={`${i > 0 ? 'border-t border-slate-100' : ''} hover:bg-blue-50/40 transition-colors duration-150`}>
-                    <td className="px-6 py-4 text-sm font-medium text-slate-800">{client.name}</td>
-                    <td className="px-6 py-4 text-sm text-slate-500">{client.company || '—'}</td>
-                    <td className="px-6 py-4 text-right font-mono text-sm text-slate-600">€ {Number(client.rate).toFixed(2)}/u</td>
+                  <tr key={client.id} className={`${i > 0 ? 'border-t border-bdr' : ''} hover:bg-surface-hover transition-colors duration-150`}>
+                    <td className="px-6 py-4 text-sm font-medium text-ink-primary">{client.name}</td>
+                    <td className="px-6 py-4 text-sm text-ink-secondary">{client.company || '—'}</td>
+                    <td className="px-6 py-4 text-right font-mono text-sm text-ink-secondary">€ {Number(client.rate).toFixed(2)}/u</td>
                     <td className="px-6 py-4">
                       <div className="flex gap-1.5 justify-end">
                         <Button size="sm" variant="ghost" onClick={() => setModal({ type: 'edit', client })}>
@@ -108,7 +108,7 @@ export default function Klanten() {
 
       {deleteConfirm && (
         <Modal title="Klant verwijderen" onClose={() => setDeleteConfirm(null)}>
-          <p className="text-sm text-slate-600 mb-5">
+          <p className="text-sm text-ink-secondary mb-5">
             Weet je zeker dat je <strong>{deleteConfirm.name}</strong> wil verwijderen? Alle bijbehorende uren worden ook verwijderd.
           </p>
           <div className="flex gap-2 justify-end">

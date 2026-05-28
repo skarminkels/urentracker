@@ -7,12 +7,12 @@ function Toggle({ checked, onChange, label, description }) {
     <label className="flex items-start gap-3 cursor-pointer">
       <div className="relative mt-0.5 shrink-0">
         <input type="checkbox" className="sr-only" checked={checked} onChange={e => onChange(e.target.checked)} />
-        <div className={`w-10 h-6 rounded-full transition-colors duration-150 ${checked ? 'bg-blue-600' : 'bg-slate-200'}`} />
-        <div className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white shadow transition-transform duration-150 ${checked ? 'translate-x-4' : 'translate-x-0'}`} />
+        <div className={`w-10 h-6 rounded-full transition-colors duration-150 ${checked ? 'bg-brand' : 'bg-surface-hover'}`} />
+        <div className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-surface shadow transition-transform duration-150 ${checked ? 'translate-x-4' : 'translate-x-0'}`} />
       </div>
       <div>
-        <p className="text-sm font-medium text-slate-700">{label}</p>
-        {description && <p className="text-xs text-slate-400 mt-0.5">{description}</p>}
+        <p className="text-sm font-medium text-ink-primary">{label}</p>
+        {description && <p className="text-xs text-ink-muted mt-0.5">{description}</p>}
       </div>
     </label>
   )
@@ -63,7 +63,7 @@ export default function Instellingen() {
       <div className="p-8 max-w-xl">
         <form onSubmit={handleSave} className="flex flex-col gap-6">
           <Card className="p-6">
-            <h3 className="text-sm font-semibold text-slate-700 mb-4">Persoonlijke gegevens</h3>
+            <h3 className="text-sm font-semibold text-ink-primary mb-4">Persoonlijke gegevens</h3>
             <div className="flex flex-col gap-4">
               <Input label="Volledige naam" placeholder="Timon Dewerchin" {...field('name')} />
               <Input label="Adres" placeholder="Straat 1, 1000 Brussel" {...field('address')} />
@@ -74,7 +74,7 @@ export default function Instellingen() {
           </Card>
 
           <Card className="p-6">
-            <h3 className="text-sm font-semibold text-slate-700 mb-4">Facturatie</h3>
+            <h3 className="text-sm font-semibold text-ink-primary mb-4">Facturatie</h3>
             <div className="flex flex-col gap-4">
               <Input label="IBAN rekeningnummer" placeholder="BE68 5390 0754 7034" {...field('iban')} />
               <Input
@@ -105,8 +105,8 @@ export default function Instellingen() {
           </Card>
 
           <Card className="p-6">
-            <h3 className="text-sm font-semibold text-slate-700 mb-1">Jaarlimiet</h3>
-            <p className="text-xs text-slate-400 mb-4">
+            <h3 className="text-sm font-semibold text-ink-primary mb-1">Jaarlimiet</h3>
+            <p className="text-xs text-ink-muted mb-4">
               De Belgische jaarlimiet voor netto-inkomsten als student-ondernemer is momenteel €8.595. Pas aan als de wettelijke grens wijzigt.
             </p>
             <div className="flex flex-col gap-4">
@@ -126,7 +126,7 @@ export default function Instellingen() {
 
           <div className="flex items-center gap-3">
             <Button type="submit">Opslaan</Button>
-            {saved && <span className="text-sm text-teal-600 font-medium">Opgeslagen ✓</span>}
+            {saved && <span className="text-sm font-medium" style={{ color: '#80CBC4' }}>Opgeslagen ✓</span>}
           </div>
         </form>
       </div>

@@ -2,12 +2,12 @@ import { useMemo } from 'react'
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
 } from 'recharts'
-import { TrendingUp, TrendingDown, Euro, Users, Clock } from 'lucide-react'
+import { TrendingUp, TrendingDown, Euro, Users } from 'lucide-react'
 import { useData } from '../context/DataContext'
 import { Card, EmptyState, PageHeader } from '../components/ui'
 import DrempelCard from '../components/DrempelCard'
 
-const COLORS = ['#2563EB', '#8b5cf6', '#0D9488', '#f59e0b', '#ef4444', '#06b6d4']
+const COLORS = ['#7B3FE4', '#AB7BF0', '#E54B8C', '#F48FB1', '#FF8A65', '#FFD54F']
 
 function fmt(amount) {
   return new Intl.NumberFormat('nl-BE', { style: 'currency', currency: 'EUR' }).format(amount)
@@ -24,22 +24,19 @@ function StatCard({ label, value, subtitle, Icon, trend }) {
   return (
     <Card className="p-5">
       <div className="flex items-start justify-between mb-3">
-        <div className="p-2.5 bg-blue-50 rounded-lg">
-          <Icon size={18} className="text-blue-600" />
+        <div className="p-2.5 bg-brand-light rounded-lg">
+          <Icon size={18} className="text-brand" />
         </div>
         {trend != null && (
           <div className={`flex items-center gap-1 text-xs font-medium ${trend >= 0 ? 'text-teal-600' : 'text-red-500'}`}>
-            {trend >= 0
-              ? <TrendingUp size={13} />
-              : <TrendingDown size={13} />
-            }
+            {trend >= 0 ? <TrendingUp size={13} /> : <TrendingDown size={13} />}
             {trend >= 0 ? '+' : ''}{trend.toFixed(1)}%
           </div>
         )}
       </div>
-      <p className="text-2xl font-semibold text-slate-800 tabular-nums">{value}</p>
-      <p className="text-xs text-slate-500 mt-1">{label}</p>
-      {subtitle && <p className="text-xs text-slate-400 mt-0.5">{subtitle}</p>}
+      <p className="text-2xl font-semibold text-ink-primary tabular-nums">{value}</p>
+      <p className="text-xs text-ink-muted mt-1">{label}</p>
+      {subtitle && <p className="text-xs text-ink-secondary mt-0.5">{subtitle}</p>}
     </Card>
   )
 }
@@ -47,12 +44,12 @@ function StatCard({ label, value, subtitle, Icon, trend }) {
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null
   return (
-    <div className="bg-white rounded-xl shadow-lg border border-slate-100 p-3 text-xs" style={{ borderLeft: '3px solid #2563EB' }}>
-      <p className="font-medium text-slate-700 mb-2">{label}</p>
+    <div className="bg-surface rounded-xl shadow-card-hover border border-bdr p-3 text-xs" style={{ borderLeft: '3px solid #7B3FE4' }}>
+      <p className="font-medium text-ink-primary mb-2">{label}</p>
       {payload.map(p => (
         <div key={p.name} className="flex items-center justify-between gap-4">
-          <span className="text-slate-500">{p.name}</span>
-          <span className="font-semibold text-slate-800 tabular-nums">{fmt(p.value)}</span>
+          <span className="text-ink-secondary">{p.name}</span>
+          <span className="font-semibold text-ink-primary tabular-nums">{fmt(p.value)}</span>
         </div>
       ))}
     </div>
@@ -160,26 +157,26 @@ export default function Dashboard() {
         {/* Client breakdown */}
         {clientBreakdown.length > 0 && (
           <Card>
-            <div className="px-6 py-4 border-b border-slate-100">
-              <h3 className="font-medium text-slate-700 text-sm">Per klant — deze maand</h3>
+            <div className="px-6 py-4 border-b border-bdr">
+              <h3 className="font-medium text-ink-secondary text-sm">Per klant — deze maand</h3>
             </div>
             <table className="w-full">
-              <thead className="bg-slate-50">
+              <thead className="bg-canvas">
                 <tr>
-                  <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">Klant</th>
-                  <th className="text-right px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">Uren</th>
-                  <th className="text-right px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">Verdiend</th>
+                  <th className="text-left px-6 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wide">Klant</th>
+                  <th className="text-right px-6 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wide">Uren</th>
+                  <th className="text-right px-6 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wide">Verdiend</th>
                 </tr>
               </thead>
               <tbody>
                 {clientBreakdown.map(({ client, hours, amount }, i) => (
-                  <tr key={client.id} className={`${i > 0 ? 'border-t border-slate-100' : ''} hover:bg-blue-50/40 transition-colors duration-150`}>
+                  <tr key={client.id} className={`${i > 0 ? 'border-t border-bdr' : ''} hover:bg-surface-hover transition-colors duration-150`}>
                     <td className="px-6 py-3.5">
-                      <span className="font-medium text-slate-800 text-sm">{client.name}</span>
-                      {client.company && <span className="text-xs text-slate-400 ml-2">{client.company}</span>}
+                      <span className="font-medium text-ink-primary text-sm">{client.name}</span>
+                      {client.company && <span className="text-xs text-ink-muted ml-2">{client.company}</span>}
                     </td>
-                    <td className="px-6 py-3.5 text-right font-mono text-sm text-slate-500">{hours.toFixed(2)}u</td>
-                    <td className="px-6 py-3.5 text-right font-mono text-sm font-semibold text-slate-800">{fmt(amount)}</td>
+                    <td className="px-6 py-3.5 text-right font-mono text-sm text-ink-secondary">{hours.toFixed(2)}u</td>
+                    <td className="px-6 py-3.5 text-right font-mono text-sm font-semibold text-ink-primary">{fmt(amount)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -190,15 +187,15 @@ export default function Dashboard() {
         {/* Bar chart */}
         {clients.length > 0 && (
           <Card className="p-6">
-            <h3 className="font-medium text-slate-700 text-sm mb-5">Omzet per klant — laatste 6 maanden</h3>
+            <h3 className="font-medium text-ink-secondary text-sm mb-5">Omzet per klant — laatste 6 maanden</h3>
             <ResponsiveContainer width="100%" height={220}>
               <BarChart data={chartData} barGap={4} barCategoryGap="30%">
-                <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" vertical={false} />
-                <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#94a3b8', fontFamily: 'Inter, system-ui' }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 11, fill: '#94a3b8', fontFamily: 'Inter, system-ui' }} axisLine={false} tickLine={false} tickFormatter={v => `€${v}`} width={56} />
-                <Tooltip content={<CustomTooltip />} cursor={{ fill: '#EFF6FF' }} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#EAE6E1" vertical={false} />
+                <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#9E9E9E', fontFamily: 'Inter, system-ui' }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 11, fill: '#9E9E9E', fontFamily: 'Inter, system-ui' }} axisLine={false} tickLine={false} tickFormatter={v => `€${v}`} width={56} />
+                <Tooltip content={<CustomTooltip />} cursor={{ fill: '#F5F1EE' }} />
                 {clients.map((client, idx) => (
-                  <Bar key={client.id} dataKey={client.name} fill={COLORS[idx % COLORS.length]} radius={[4, 4, 0, 0]} />
+                  <Bar key={client.id} dataKey={client.name} fill={COLORS[idx % COLORS.length]} radius={[5, 5, 0, 0]} />
                 ))}
               </BarChart>
             </ResponsiveContainer>

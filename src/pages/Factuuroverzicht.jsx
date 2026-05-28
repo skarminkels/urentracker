@@ -46,7 +46,7 @@ function generateOverzichtPDF(monthKey, entriesForMonth, clientMap) {
   doc.text(capLabel, marginL, y)
   y += 12
 
-  doc.setDrawColor(226, 232, 240)
+  doc.setDrawColor(234, 230, 225)
   doc.setLineWidth(0.3)
   doc.line(marginL, y, pageW - marginL, y)
   y += 8
@@ -65,25 +65,25 @@ function generateOverzichtPDF(monthKey, entriesForMonth, clientMap) {
 
     doc.setFontSize(12)
     doc.setFont('helvetica', 'bold')
-    doc.setTextColor(30, 41, 59)
+    doc.setTextColor(26, 26, 26)
     doc.text(client.name + (client.company ? `  —  ${client.company}` : ''), marginL, y)
     y += 5
     doc.setFontSize(10)
     doc.setFont('helvetica', 'normal')
-    doc.setTextColor(100, 116, 139)
+    doc.setTextColor(107, 107, 107)
     doc.text(`Uurtarief: € ${Number(client.rate).toFixed(2)}/u`, marginL, y)
     y += 7
 
     doc.setFontSize(9)
     doc.setFont('helvetica', 'bold')
-    doc.setTextColor(148, 163, 184)
+    doc.setTextColor(158, 158, 158)
     doc.text('Datum', marginL, y)
     doc.text('Omschrijving', marginL + 35, y)
     doc.text('Uren', pageW - marginL - 40, y, { align: 'right' })
     doc.text('Bedrag', pageW - marginL, y, { align: 'right' })
     y += 4
 
-    doc.setDrawColor(226, 232, 240)
+    doc.setDrawColor(234, 230, 225)
     doc.setLineWidth(0.2)
     doc.line(marginL, y, pageW - marginL, y)
     y += 5
@@ -112,25 +112,25 @@ function generateOverzichtPDF(monthKey, entriesForMonth, clientMap) {
       if (y > 270) { doc.addPage(); y = 20 }
     }
 
-    doc.setDrawColor(226, 232, 240)
+    doc.setDrawColor(234, 230, 225)
     doc.line(marginL + 100, y, pageW - marginL, y)
     y += 5
     doc.setFontSize(10)
     doc.setFont('helvetica', 'bold')
-    doc.setTextColor(30, 41, 59)
+    doc.setTextColor(26, 26, 26)
     doc.text('Subtotaal', pageW - marginL - 40, y, { align: 'right' })
     doc.text(fmt(clientTotal), pageW - marginL, y, { align: 'right' })
     grandTotal += clientTotal
     y += 12
   }
 
-  doc.setDrawColor(59, 130, 246)
+  doc.setDrawColor(123, 63, 228)
   doc.setLineWidth(0.5)
   doc.line(marginL, y, pageW - marginL, y)
   y += 7
   doc.setFontSize(13)
   doc.setFont('helvetica', 'bold')
-  doc.setTextColor(30, 41, 59)
+  doc.setTextColor(26, 26, 26)
   doc.text('Totaal', marginL, y)
   doc.text(fmt(grandTotal), pageW - marginL, y, { align: 'right' })
 
@@ -148,10 +148,10 @@ function BewijsModal({ client, monthKey, entries, settings, onClose }) {
   return (
     <Modal title="Bewijs van werk exporteren" onClose={onClose}>
       <div className="flex flex-col gap-4">
-        <div className="bg-slate-50 rounded-lg px-4 py-3 text-sm text-slate-600">
-          <span className="font-medium text-slate-800">{client.name}</span>
-          {client.company && <span className="text-slate-500"> — {client.company}</span>}
-          <span className="text-slate-400 ml-2">· {monthLabel(monthKey)}</span>
+        <div className="bg-surface-hover rounded-lg px-4 py-3 text-sm text-ink-secondary">
+          <span className="font-medium text-ink-primary">{client.name}</span>
+          {client.company && <span className="text-ink-muted"> — {client.company}</span>}
+          <span className="text-ink-muted ml-2">· {monthLabel(monthKey)}</span>
         </div>
 
         <Input
@@ -226,18 +226,14 @@ export default function Factuuroverzicht() {
             const clientRows = Object.entries(data.byClient)
             return (
               <Card key={key}>
-                <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+                <div className="flex items-center justify-between px-6 py-4 border-b border-bdr">
                   <div>
-                    <span className="font-semibold text-slate-800">{monthLabel(key)}</span>
-                    <span className="text-slate-400 text-sm ml-3">
+                    <span className="font-semibold text-ink-primary">{monthLabel(key)}</span>
+                    <span className="text-ink-muted text-sm ml-3">
                       {data.totalHours.toFixed(2)}u · {fmt(data.totalAmount)}
                     </span>
                   </div>
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    onClick={() => generateOverzichtPDF(key, data.entries, clientMap)}
-                  >
+                  <Button size="sm" variant="secondary" onClick={() => generateOverzichtPDF(key, data.entries, clientMap)}>
                     <Download size={13} /> PDF exporteren
                   </Button>
                 </div>
@@ -249,18 +245,18 @@ export default function Factuuroverzicht() {
                     return (
                       <div
                         key={clientId}
-                        className={`flex items-center justify-between px-6 py-3.5 ${i < clientRows.length - 1 ? 'border-b border-slate-100' : ''} hover:bg-blue-50/40 transition-colors duration-150`}
+                        className={`flex items-center justify-between px-6 py-3.5 ${i < clientRows.length - 1 ? 'border-b border-bdr' : ''} hover:bg-surface-hover transition-colors duration-150`}
                       >
                         <div className="flex items-center gap-3 pl-2">
-                          <span className="text-slate-300 text-xs">└</span>
+                          <span className="text-ink-muted text-xs">└</span>
                           <div>
-                            <span className="text-sm font-medium text-slate-700">{client.name}</span>
-                            {client.company && <span className="text-xs text-slate-400 ml-2">{client.company}</span>}
+                            <span className="text-sm font-medium text-ink-primary">{client.name}</span>
+                            {client.company && <span className="text-xs text-ink-muted ml-2">{client.company}</span>}
                           </div>
                         </div>
                         <div className="flex items-center gap-6">
-                          <span className="font-mono text-sm text-slate-500">{clientData.hours.toFixed(2)}u</span>
-                          <span className="font-mono text-sm font-medium text-slate-700 w-24 text-right">{fmt(clientData.amount)}</span>
+                          <span className="font-mono text-sm text-ink-secondary">{clientData.hours.toFixed(2)}u</span>
+                          <span className="font-mono text-sm font-medium text-ink-primary w-24 text-right">{fmt(clientData.amount)}</span>
                           <Button
                             size="sm"
                             variant="ghost"

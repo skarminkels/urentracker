@@ -40,13 +40,13 @@ export default function DrempelCard() {
 
   const barGradient =
     pct >= 90 ? '#DC2626' :
-    pct >= 70 ? 'linear-gradient(to right, #2563EB, #D97706)' :
-    'linear-gradient(to right, #2563EB, #3B82F6)'
+    pct >= 70 ? 'linear-gradient(to right, #7B3FE4, #E54B8C)' :
+    'linear-gradient(to right, #7B3FE4, #AB7BF0)'
 
   const pctColor =
     pct >= 90 ? 'text-red-600' :
     pct >= 70 ? 'text-amber-600' :
-    'text-blue-600'
+    'text-brand'
 
   let projectionText = null
   if (!exceeded && monthsWorked > 0) {
@@ -62,7 +62,7 @@ export default function DrempelCard() {
   return (
     <Card className="p-5">
       <div className="flex items-center justify-between mb-3">
-        <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+        <p className="text-xs font-semibold text-ink-muted uppercase tracking-wide">
           Jaarlimiet studentenonderneming
         </p>
         <span className={`text-sm font-semibold tabular-nums ${pctColor}`}>
@@ -71,7 +71,7 @@ export default function DrempelCard() {
       </div>
 
       {/* Progress bar */}
-      <div className="w-full bg-slate-100 rounded-full h-3 mb-4 overflow-hidden">
+      <div className="w-full bg-surface-hover rounded-full h-3 mb-4 overflow-hidden">
         <div
           className="h-3 rounded-full transition-all duration-700 ease-out"
           style={{ width: `${pct}%`, background: barGradient }}
@@ -81,19 +81,19 @@ export default function DrempelCard() {
       {/* Stats row */}
       <div className="grid grid-cols-3 gap-4 mb-4">
         <div>
-          <p className="text-xs text-slate-400 mb-1">Verdiend dit jaar</p>
-          <p className="text-sm font-semibold text-slate-800 tabular-nums">{fmt(yearTotal)}</p>
+          <p className="text-xs text-ink-muted mb-1">Verdiend dit jaar</p>
+          <p className="text-sm font-semibold text-ink-primary tabular-nums">{fmt(yearTotal)}</p>
         </div>
         <div>
-          <p className="text-xs text-slate-400 mb-1">Nog beschikbaar</p>
+          <p className="text-xs text-ink-muted mb-1">Nog beschikbaar</p>
           {exceeded
             ? <p className="text-sm font-semibold text-red-600 tabular-nums">−{fmt(overshoot)}</p>
-            : <p className="text-sm font-semibold text-slate-800 tabular-nums">{fmt(remaining)}</p>
+            : <p className="text-sm font-semibold text-ink-primary tabular-nums">{fmt(remaining)}</p>
           }
         </div>
         <div>
-          <p className="text-xs text-slate-400 mb-1">Limiet</p>
-          <p className="text-sm font-semibold text-slate-800 tabular-nums">{fmt(threshold)}</p>
+          <p className="text-xs text-ink-muted mb-1">Limiet</p>
+          <p className="text-sm font-semibold text-ink-primary tabular-nums">{fmt(threshold)}</p>
         </div>
       </div>
 
@@ -107,10 +107,10 @@ export default function DrempelCard() {
       )}
 
       {projectionText && (
-        <p className="text-xs text-slate-500 mb-2">{projectionText}</p>
+        <p className="text-xs text-ink-secondary mb-2">{projectionText}</p>
       )}
 
-      <p className="text-xs text-slate-400 border-t border-slate-100 pt-3">
+      <p className="text-xs text-ink-muted border-t border-bdr pt-3">
         Brutobedragen (uren × tarief). Nettobedrag kan afwijken na kosten en belastingen — raadpleeg een belastingadviseur.
       </p>
     </Card>
