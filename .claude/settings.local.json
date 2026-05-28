@@ -4,7 +4,13 @@
       "Bash(npm run *)",
       "Bash(mktemp -d)",
       "Bash(SCREENSHOT_DIR=__TRACKED_VAR__ node verify.mjs)",
-      "Bash(npm install *)"
+      "Bash(npm install *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(git commit *)",
+      "Bash(npx playwright *)",
+      "Bash(npm init *)"
     ]
   }
 }
