@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react'
+import { Download } from 'lucide-react'
 import jsPDF from 'jspdf'
 import { useData } from '../context/DataContext'
-import { Card, Button, EmptyState, Modal, Input } from '../components/ui'
+import { Card, Button, EmptyState, Modal, Input, PageHeader } from '../components/ui'
 import { generateBewijsVanWerk } from '../lib/bewijsVanWerk'
 
 function fmt(amount) {
@@ -136,7 +137,6 @@ function generateOverzichtPDF(monthKey, entriesForMonth, clientMap) {
   doc.save(`factuuroverzicht-${monthKey}.pdf`)
 }
 
-// Modal to ask for invoice number before generating Bewijs van werk
 function BewijsModal({ client, monthKey, entries, settings, onClose }) {
   const [invoiceNumber, setInvoiceNumber] = useState('')
 
@@ -170,7 +170,7 @@ function BewijsModal({ client, monthKey, entries, settings, onClose }) {
 
         <div className="flex gap-2 justify-end pt-1">
           <Button variant="secondary" onClick={onClose}>Annuleren</Button>
-          <Button onClick={handleGenerate}>PDF genereren</Button>
+          <Button onClick={handleGenerate}><Download size={14} /> PDF genereren</Button>
         </div>
       </div>
     </Modal>
@@ -180,7 +180,7 @@ function BewijsModal({ client, monthKey, entries, settings, onClose }) {
 export default function Factuuroverzicht() {
   const { clients, entries, settings } = useData()
   const clientMap = Object.fromEntries(clients.map(c => [c.id, c]))
-  const [bewijsTarget, setBewijsTarget] = useState(null) // { client, monthKey, entries }
+  const [bewijsTarget, setBewijsTarget] = useState(null)
 
   const months = useMemo(() => {
     const map = {}
@@ -205,78 +205,78 @@ export default function Factuuroverzicht() {
 
   if (months.length === 0) {
     return (
-      <div className="p-8">
-        <Card>
-          <EmptyState icon="📄" title="Nog geen factuurdata" description="Zodra je uren logt verschijnen hier de maandelijkse overzichten met PDF-export." />
-        </Card>
-      </div>
+      <>
+        <PageHeader title="Factuuroverzicht" subtitle="Maandelijkse overzichten" />
+        <div className="p-8">
+          <Card>
+            <EmptyState icon="📄" title="Nog geen factuurdata" description="Zodra je uren logt verschijnen hier de maandelijkse overzichten met PDF-export." />
+          </Card>
+        </div>
+      </>
     )
   }
 
   return (
-    <div className="p-8">
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold text-slate-800">Factuuroverzicht</h2>
-        <p className="text-sm text-slate-500 mt-0.5">Exporteer een maandoverzicht of bewijs van werk per klant</p>
-      </div>
+    <>
+      <PageHeader title="Factuuroverzicht" subtitle="Exporteer per maand of per klant" />
 
-      <div className="flex flex-col gap-4">
-        {months.map(([key, data]) => {
-          const clientRows = Object.entries(data.byClient)
-          return (
-            <Card key={key}>
-              {/* Month header row */}
-              <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
-                <div>
-                  <span className="font-semibold text-slate-800">{monthLabel(key)}</span>
-                  <span className="text-slate-400 text-sm ml-3">
-                    {data.totalHours.toFixed(2)}u · {fmt(data.totalAmount)}
-                  </span>
+      <div className="p-8">
+        <div className="flex flex-col gap-4">
+          {months.map(([key, data]) => {
+            const clientRows = Object.entries(data.byClient)
+            return (
+              <Card key={key}>
+                <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+                  <div>
+                    <span className="font-semibold text-slate-800">{monthLabel(key)}</span>
+                    <span className="text-slate-400 text-sm ml-3">
+                      {data.totalHours.toFixed(2)}u · {fmt(data.totalAmount)}
+                    </span>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    onClick={() => generateOverzichtPDF(key, data.entries, clientMap)}
+                  >
+                    <Download size={13} /> PDF exporteren
+                  </Button>
                 </div>
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  onClick={() => generateOverzichtPDF(key, data.entries, clientMap)}
-                >
-                  PDF exporteren
-                </Button>
-              </div>
 
-              {/* Per-client sub-rows */}
-              <div>
-                {clientRows.map(([clientId, clientData], i) => {
-                  const client = clientMap[clientId]
-                  if (!client) return null
-                  return (
-                    <div
-                      key={clientId}
-                      className={`flex items-center justify-between px-6 py-3.5 ${i < clientRows.length - 1 ? 'border-b border-slate-100' : ''} hover:bg-slate-50 transition-colors`}
-                    >
-                      <div className="flex items-center gap-3 pl-2">
-                        <span className="text-slate-300 text-xs">└</span>
-                        <div>
-                          <span className="text-sm font-medium text-slate-700">{client.name}</span>
-                          {client.company && <span className="text-xs text-slate-400 ml-2">{client.company}</span>}
+                <div>
+                  {clientRows.map(([clientId, clientData], i) => {
+                    const client = clientMap[clientId]
+                    if (!client) return null
+                    return (
+                      <div
+                        key={clientId}
+                        className={`flex items-center justify-between px-6 py-3.5 ${i < clientRows.length - 1 ? 'border-b border-slate-100' : ''} hover:bg-blue-50/40 transition-colors duration-150`}
+                      >
+                        <div className="flex items-center gap-3 pl-2">
+                          <span className="text-slate-300 text-xs">└</span>
+                          <div>
+                            <span className="text-sm font-medium text-slate-700">{client.name}</span>
+                            {client.company && <span className="text-xs text-slate-400 ml-2">{client.company}</span>}
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-6">
+                          <span className="font-mono text-sm text-slate-500">{clientData.hours.toFixed(2)}u</span>
+                          <span className="font-mono text-sm font-medium text-slate-700 w-24 text-right">{fmt(clientData.amount)}</span>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => setBewijsTarget({ client, monthKey: key, entries: clientData.entries })}
+                          >
+                            Bewijs van werk
+                          </Button>
                         </div>
                       </div>
-                      <div className="flex items-center gap-6">
-                        <span className="font-mono text-sm text-slate-500">{clientData.hours.toFixed(2)}u</span>
-                        <span className="font-mono text-sm font-medium text-slate-700 w-24 text-right">{fmt(clientData.amount)}</span>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => setBewijsTarget({ client, monthKey: key, entries: clientData.entries })}
-                        >
-                          Bewijs van werk
-                        </Button>
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            </Card>
-          )
-        })}
+                    )
+                  })}
+                </div>
+              </Card>
+            )
+          })}
+        </div>
       </div>
 
       {bewijsTarget && (
@@ -288,6 +288,6 @@ export default function Factuuroverzicht() {
           onClose={() => setBewijsTarget(null)}
         />
       )}
-    </div>
+    </>
   )
 }

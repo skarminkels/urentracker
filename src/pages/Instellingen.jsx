@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { useData } from '../context/DataContext'
-import { Card, Input, Button } from '../components/ui'
+import { Card, Input, Button, PageHeader } from '../components/ui'
 
 function Toggle({ checked, onChange, label, description }) {
   return (
     <label className="flex items-start gap-3 cursor-pointer">
       <div className="relative mt-0.5 shrink-0">
         <input type="checkbox" className="sr-only" checked={checked} onChange={e => onChange(e.target.checked)} />
-        <div className={`w-10 h-6 rounded-full transition-colors ${checked ? 'bg-blue-600' : 'bg-slate-200'}`} />
-        <div className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${checked ? 'translate-x-4' : 'translate-x-0'}`} />
+        <div className={`w-10 h-6 rounded-full transition-colors duration-150 ${checked ? 'bg-blue-600' : 'bg-slate-200'}`} />
+        <div className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white shadow transition-transform duration-150 ${checked ? 'translate-x-4' : 'translate-x-0'}`} />
       </div>
       <div>
         <p className="text-sm font-medium text-slate-700">{label}</p>
@@ -57,83 +57,79 @@ export default function Instellingen() {
   }
 
   return (
-    <div className="p-8 max-w-xl flex flex-col gap-6">
-      <div>
-        <h2 className="text-xl font-semibold text-slate-800">Instellingen</h2>
-        <p className="text-sm text-slate-500 mt-0.5">Jouw gegevens worden gebruikt in facturen en PDF-exports.</p>
-      </div>
+    <>
+      <PageHeader title="Instellingen" subtitle="Jouw gegevens worden gebruikt in facturen en PDF-exports." />
 
-      <form onSubmit={handleSave} className="flex flex-col gap-6">
-        {/* Personal details */}
-        <Card className="p-6">
-          <h3 className="text-sm font-semibold text-slate-700 mb-4">Persoonlijke gegevens</h3>
-          <div className="flex flex-col gap-4">
-            <Input label="Volledige naam" placeholder="Timon Dewerchin" {...field('name')} />
-            <Input label="Adres" placeholder="Straat 1, 1000 Brussel" {...field('address')} />
-            <Input label="E-mailadres" type="email" placeholder="timon@voorbeeld.be" {...field('email')} />
-            <Input label="Telefoonnummer" type="tel" placeholder="+32 470 00 00 00" {...field('phone')} />
-            <Input label="Ondernemingsnummer student (optioneel)" placeholder="BE 0XXX.XXX.XXX" {...field('studentNumber')} />
-          </div>
-        </Card>
-
-        {/* Facturatie */}
-        <Card className="p-6">
-          <h3 className="text-sm font-semibold text-slate-700 mb-4">Facturatie</h3>
-          <div className="flex flex-col gap-4">
-            <Input label="IBAN rekeningnummer" placeholder="BE68 5390 0754 7034" {...field('iban')} />
-            <Input
-              label="Standaard betaaltermijn (dagen)"
-              type="number" min="1" step="1" placeholder="30"
-              value={form.paymentTermDays ?? 30}
-              onChange={e => { setForm(p => ({ ...p, paymentTermDays: e.target.value })); setSaved(false) }}
-            />
-            <div className="pt-1">
-              <Toggle
-                label="BTW toepassen"
-                description="Standaard uit voor student-ondernemers. Schakel in als je BTW-plichtig bent."
-                {...toggle('btwEnabled')}
-              />
+      <div className="p-8 max-w-xl">
+        <form onSubmit={handleSave} className="flex flex-col gap-6">
+          <Card className="p-6">
+            <h3 className="text-sm font-semibold text-slate-700 mb-4">Persoonlijke gegevens</h3>
+            <div className="flex flex-col gap-4">
+              <Input label="Volledige naam" placeholder="Timon Dewerchin" {...field('name')} />
+              <Input label="Adres" placeholder="Straat 1, 1000 Brussel" {...field('address')} />
+              <Input label="E-mailadres" type="email" placeholder="timon@voorbeeld.be" {...field('email')} />
+              <Input label="Telefoonnummer" type="tel" placeholder="+32 470 00 00 00" {...field('phone')} />
+              <Input label="Ondernemingsnummer student (optioneel)" placeholder="BE 0XXX.XXX.XXX" {...field('studentNumber')} />
             </div>
-            {form.btwEnabled && (
-              <div className="grid grid-cols-2 gap-3 pl-13">
-                <Input label="BTW-nummer" placeholder="BE 0XXX.XXX.XXX" {...field('btwNumber')} />
-                <Input
-                  label="BTW-tarief (%)"
-                  type="number" min="0" max="100" step="1" placeholder="21"
-                  value={form.btwRate ?? 21}
-                  onChange={e => { setForm(p => ({ ...p, btwRate: e.target.value })); setSaved(false) }}
+          </Card>
+
+          <Card className="p-6">
+            <h3 className="text-sm font-semibold text-slate-700 mb-4">Facturatie</h3>
+            <div className="flex flex-col gap-4">
+              <Input label="IBAN rekeningnummer" placeholder="BE68 5390 0754 7034" {...field('iban')} />
+              <Input
+                label="Standaard betaaltermijn (dagen)"
+                type="number" min="1" step="1" placeholder="30"
+                value={form.paymentTermDays ?? 30}
+                onChange={e => { setForm(p => ({ ...p, paymentTermDays: e.target.value })); setSaved(false) }}
+              />
+              <div className="pt-1">
+                <Toggle
+                  label="BTW toepassen"
+                  description="Standaard uit voor student-ondernemers. Schakel in als je BTW-plichtig bent."
+                  {...toggle('btwEnabled')}
                 />
               </div>
-            )}
-          </div>
-        </Card>
+              {form.btwEnabled && (
+                <div className="grid grid-cols-2 gap-3 pl-13">
+                  <Input label="BTW-nummer" placeholder="BE 0XXX.XXX.XXX" {...field('btwNumber')} />
+                  <Input
+                    label="BTW-tarief (%)"
+                    type="number" min="0" max="100" step="1" placeholder="21"
+                    value={form.btwRate ?? 21}
+                    onChange={e => { setForm(p => ({ ...p, btwRate: e.target.value })); setSaved(false) }}
+                  />
+                </div>
+              )}
+            </div>
+          </Card>
 
-        {/* Studentenonderneming */}
-        <Card className="p-6">
-          <h3 className="text-sm font-semibold text-slate-700 mb-1">Jaarlimiet</h3>
-          <p className="text-xs text-slate-400 mb-4">
-            De Belgische jaarlimiet voor netto-inkomsten als student-ondernemer is momenteel €8.595. Pas aan als de wettelijke grens wijzigt.
-          </p>
-          <div className="flex flex-col gap-4">
-            <Input
-              label="Jaarlimiet (€ netto)"
-              type="number" min="0" step="1" placeholder="8595"
-              value={form.threshold ?? 8595}
-              onChange={e => { setForm(p => ({ ...p, threshold: e.target.value })); setSaved(false) }}
-            />
-            <Toggle
-              label="Toon drempelwaarschuwing op dashboard"
-              description="Toont de voortgangsbalk op het dashboard."
-              {...toggle('showThreshold')}
-            />
-          </div>
-        </Card>
+          <Card className="p-6">
+            <h3 className="text-sm font-semibold text-slate-700 mb-1">Jaarlimiet</h3>
+            <p className="text-xs text-slate-400 mb-4">
+              De Belgische jaarlimiet voor netto-inkomsten als student-ondernemer is momenteel €8.595. Pas aan als de wettelijke grens wijzigt.
+            </p>
+            <div className="flex flex-col gap-4">
+              <Input
+                label="Jaarlimiet (€ netto)"
+                type="number" min="0" step="1" placeholder="8595"
+                value={form.threshold ?? 8595}
+                onChange={e => { setForm(p => ({ ...p, threshold: e.target.value })); setSaved(false) }}
+              />
+              <Toggle
+                label="Toon drempelwaarschuwing op dashboard"
+                description="Toont de voortgangsbalk op het dashboard."
+                {...toggle('showThreshold')}
+              />
+            </div>
+          </Card>
 
-        <div className="flex items-center gap-3">
-          <Button type="submit">Opslaan</Button>
-          {saved && <span className="text-sm text-green-600 font-medium">Opgeslagen ✓</span>}
-        </div>
-      </form>
-    </div>
+          <div className="flex items-center gap-3">
+            <Button type="submit">Opslaan</Button>
+            {saved && <span className="text-sm text-teal-600 font-medium">Opgeslagen ✓</span>}
+          </div>
+        </form>
+      </div>
+    </>
   )
 }
