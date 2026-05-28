@@ -19,7 +19,7 @@ export function formatDurationShort(ms) {
 export function formatTime(timestamp) {
   if (!timestamp) return ''
   const d = new Date(timestamp)
-  return d.toLocaleTimeString('nl-BE', { hour: '2-digit', minute: '2-digit' })
+  return d.toLocaleTimeString('nl-BE', { hour: '2-digit', minute: '2-digit', hour12: false })
 }
 
 export function formatDate(timestamp) {
