@@ -1,8 +1,10 @@
 # Urentracker
 
-Een lokale time-tracking app gebaseerd op Toggl Track. Draait volledig in de browser zonder backend.
+Een lokale time-tracking app gebaseerd op Toggl Track. Draait volledig in de browser zonder backend — alle data blijft op jouw toestel.
 
-## Starten
+**Live:** [urentracker-nine.vercel.app](https://urentracker-nine.vercel.app)
+
+## Lokaal draaien
 
 ```bash
 npm install
@@ -10,6 +12,10 @@ npm run dev
 ```
 
 Open daarna http://localhost:5173 in je browser.
+
+## Deployment
+
+De app wordt automatisch gedeployed via [Vercel](https://vercel.com). Elke push naar `main` triggert een nieuwe deploy. Geen server of database nodig — alles draait client-side.
 
 ## Functionaliteit
 
