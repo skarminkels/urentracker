@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { supabase } from './lib/supabase'
+import LoginPage from './components/Auth/LoginPage'
 import Sidebar from './components/Sidebar'
 import TimerPage from './components/Timer/TimerPage'
 import ProjectsPage from './components/Projects/ProjectsPage'
@@ -7,8 +9,40 @@ import InvoicesPage from './components/Invoices/InvoicesPage'
 import { useAppState } from './hooks/useAppState'
 
 export default function App() {
+  const [session, setSession] = useState(null)
+  const [authLoading, setAuthLoading] = useState(true)
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session)
+      setAuthLoading(false)
+    })
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
+
+  if (authLoading) return null
+
+  if (!session) return <LoginPage />
+
+  return <MainApp userId={session.user.id} />
+}
+
+function MainApp({ userId }) {
   const [page, setPage] = useState('timer')
-  const state = useAppState()
+  const state = useAppState(userId)
+
+  if (state.loading) {
+    return (
+      <div className="min-h-screen bg-[#f5f5f5] flex items-center justify-center">
+        <div className="w-6 h-6 rounded-full border-2 border-[#c95da7] border-t-transparent animate-spin" />
+      </div>
+    )
+  }
 
   return (
     <div className="flex min-h-screen bg-[#f5f5f5] font-sans">
@@ -42,6 +76,12 @@ export default function App() {
             entries={state.entries}
             projects={state.projects}
             currency={state.currency}
+            invoices={state.invoices}
+            invoiceSettings={state.invoiceSettings}
+            addInvoice={state.addInvoice}
+            updateInvoice={state.updateInvoice}
+            saveInvoiceSettings={state.saveInvoiceSettings}
+            consumeInvoiceNumber={state.consumeInvoiceNumber}
           />
         )}
         {page === 'projects' && (

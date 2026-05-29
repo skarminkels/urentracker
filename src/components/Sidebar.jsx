@@ -1,4 +1,5 @@
-import { Timer, BarChart2, Folder, Clock, Receipt } from 'lucide-react'
+import { Timer, BarChart2, Folder, Clock, Receipt, LogOut } from 'lucide-react'
+import { supabase } from '../lib/supabase'
 
 const navItems = [
   { id: 'timer', label: 'Timer', icon: Timer },
@@ -35,6 +36,16 @@ export default function Sidebar({ page, setPage }) {
           </button>
         ))}
       </nav>
+
+      <div className="px-2 pb-4 border-t border-white/10 pt-3">
+        <button
+          onClick={() => supabase.auth.signOut()}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/40 hover:text-white/70 hover:bg-white/5 transition-colors"
+        >
+          <LogOut size={18} className="shrink-0" />
+          <span className="hidden lg:block">Uitloggen</span>
+        </button>
+      </div>
     </aside>
   )
 }
