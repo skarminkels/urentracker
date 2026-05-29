@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { Settings, FileText } from 'lucide-react'
+import { Settings, FileText, AlertCircle, X } from 'lucide-react'
 import { jsPDF } from 'jspdf'
 import InvoiceSettingsModal from './InvoiceSettingsModal'
 import { generateId } from '../../utils/storage'
@@ -37,6 +37,18 @@ function getEffectiveRate(entry, project) {
 
 function isSettingsComplete(s) {
   return !!(s?.naam && s?.straat && s?.postcode && s?.gemeente && s?.iban)
+}
+
+function isClientComplete(project) {
+  return !!(project?.client?.trim() && project?.clientAddress?.trim())
+}
+
+function clientIncompleteMsg(project) {
+  const missingName = !project?.client?.trim()
+  const missingAddress = !project?.clientAddress?.trim()
+  if (missingName && missingAddress) return 'Vul de klantnaam en het adres in bij dit project.'
+  if (missingName) return 'Vul de klantnaam in bij dit project.'
+  return 'Vul het adres van de klant in bij dit project.'
 }
 
 function computeGroupTotals(group, projects) {
@@ -94,7 +106,7 @@ function buildPDF(invoiceNumber, settings, project, groupEntries, projects) {
   doc.text(settings.iban, L, y)
 
   // ── CLIENT (right) ───────────────────────────────────────
-  const clientName = project?.client || project?.name || 'Onbekende klant'
+  const clientName = project?.client || project?.name || ''
   const clientAddressLines = project?.clientAddress
     ? project.clientAddress.split('\n').map(l => l.trim()).filter(Boolean)
     : []
@@ -197,9 +209,11 @@ export default function InvoicesPage({
   entries, projects,
   invoices, invoiceSettings,
   addInvoice, updateInvoice, saveInvoiceSettings, consumeInvoiceNumber,
+  onEditProject,
 }) {
   const [showSettings, setShowSettings] = useState(false)
   const [pendingGroup, setPendingGroup] = useState(null)
+  const [clientError, setClientError] = useState(null)
 
   const groups = useMemo(() => {
     const map = new Map()
@@ -265,9 +279,15 @@ export default function InvoicesPage({
   }
 
   async function handleGeneratePDF(group) {
+    setClientError(null)
     if (!isSettingsComplete(invoiceSettings)) {
       setPendingGroup(group)
       setShowSettings(true)
+      return
+    }
+    const project = projects.find(p => p.id === group.projectId)
+    if (!isClientComplete(project)) {
+      setClientError({ message: clientIncompleteMsg(project), projectId: group.projectId })
       return
     }
     await doGeneratePDF(group, invoiceSettings)
@@ -278,7 +298,14 @@ export default function InvoicesPage({
     setShowSettings(false)
     const pending = pendingGroup
     setPendingGroup(null)
-    if (pending) doGeneratePDF(pending, settings)
+    if (pending) {
+      const project = projects.find(p => p.id === pending.projectId)
+      if (!isClientComplete(project)) {
+        setClientError({ message: clientIncompleteMsg(project), projectId: pending.projectId })
+        return
+      }
+      doGeneratePDF(pending, settings)
+    }
   }
 
   return (
@@ -293,6 +320,22 @@ export default function InvoicesPage({
           <span className="hidden sm:inline">Mijn gegevens</span>
         </button>
       </div>
+
+      {clientError && (
+        <div className="mb-4 flex items-center gap-3 px-4 py-3 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-800">
+          <AlertCircle size={16} className="shrink-0" />
+          <span className="flex-1">{clientError.message}</span>
+          <button
+            onClick={() => { onEditProject?.(clientError.projectId); setClientError(null) }}
+            className="underline font-medium whitespace-nowrap"
+          >
+            Bewerk project
+          </button>
+          <button onClick={() => setClientError(null)} className="ml-1 text-amber-500 hover:text-amber-700">
+            <X size={14} />
+          </button>
+        </div>
+      )}
 
       {groups.length === 0 ? (
         <div className="text-center py-24 text-gray-400">
@@ -321,6 +364,15 @@ export default function InvoicesPage({
                 const { totalHours, totalAmount } = computeGroupTotals(group, projects)
                 const record = getRecord(group)
                 const isFactured = record?.status === 'gefactureerd'
+
+                const settingsOk = isSettingsComplete(invoiceSettings)
+                const clientOk = isClientComplete(project)
+                const canGenerate = settingsOk && clientOk
+                const btnTitle = !settingsOk
+                  ? 'Vul eerst je eigen gegevens in via "Mijn gegevens"'
+                  : !clientOk
+                  ? clientIncompleteMsg(project)
+                  : undefined
 
                 return (
                   <tr
@@ -379,7 +431,12 @@ export default function InvoicesPage({
                     <td className="px-5 py-4">
                       <button
                         onClick={() => handleGeneratePDF(group)}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#c95da7] text-white text-xs font-medium hover:bg-[#a04389] transition-colors whitespace-nowrap"
+                        title={btnTitle}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors whitespace-nowrap ${
+                          canGenerate
+                            ? 'bg-[#c95da7] text-white hover:bg-[#a04389]'
+                            : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                        }`}
                       >
                         <FileText size={13} />
                         PDF
