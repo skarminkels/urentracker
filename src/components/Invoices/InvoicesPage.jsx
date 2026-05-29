@@ -2,12 +2,7 @@ import { useState, useMemo } from 'react'
 import { Settings, FileText } from 'lucide-react'
 import { jsPDF } from 'jspdf'
 import InvoiceSettingsModal from './InvoiceSettingsModal'
-import {
-  loadInvoiceSettings, saveInvoiceSettings,
-  loadInvoices, saveInvoices,
-  consumeInvoiceNumber,
-  generateId,
-} from '../../utils/storage'
+import { generateId } from '../../utils/storage'
 
 const DUTCH_MONTHS = [
   'januari', 'februari', 'maart', 'april', 'mei', 'juni',
@@ -32,7 +27,7 @@ function fmtBelgian(amount, decimals = 2) {
 }
 
 function fmtCurrency(amount) {
-  return `€ ${fmtBelgian(amount)}`
+  return `€ ${fmtBelgian(amount)}`
 }
 
 function getEffectiveRate(entry, project) {
@@ -198,9 +193,11 @@ function buildPDF(invoiceNumber, settings, project, groupEntries, projects) {
   return doc
 }
 
-export default function InvoicesPage({ entries, projects }) {
-  const [invoiceSettings, setInvoiceSettings] = useState(() => loadInvoiceSettings())
-  const [invoices, setInvoices] = useState(() => loadInvoices())
+export default function InvoicesPage({
+  entries, projects,
+  invoices, invoiceSettings,
+  addInvoice, updateInvoice, saveInvoiceSettings, consumeInvoiceNumber,
+}) {
   const [showSettings, setShowSettings] = useState(false)
   const [pendingGroup, setPendingGroup] = useState(null)
 
@@ -232,65 +229,52 @@ export default function InvoicesPage({ entries, projects }) {
     )
   }
 
-  function handleToggleStatus(group) {
+  async function handleToggleStatus(group) {
     const record = getRecord(group)
-    let updated
     if (!record) {
-      updated = [
-        ...invoices,
-        {
-          id: generateId(),
-          projectId: group.projectId,
-          month: group.month,
-          invoiceNumber: null,
-          generatedAt: Date.now(),
-          status: 'gefactureerd',
-        },
-      ]
+      await addInvoice({
+        id: generateId(),
+        projectId: group.projectId,
+        month: group.month,
+        invoiceNumber: null,
+        generatedAt: Date.now(),
+        status: 'gefactureerd',
+      })
     } else {
-      updated = invoices.map(inv =>
-        inv.id === record.id
-          ? { ...inv, status: inv.status === 'gefactureerd' ? 'niet-gefactureerd' : 'gefactureerd' }
-          : inv,
-      )
+      const newStatus = record.status === 'gefactureerd' ? 'niet-gefactureerd' : 'gefactureerd'
+      await updateInvoice(record.id, { status: newStatus })
     }
-    saveInvoices(updated)
-    setInvoices(updated)
   }
 
-  function doGeneratePDF(group, settings) {
-    const invoiceNumber = consumeInvoiceNumber()
+  async function doGeneratePDF(group, settings) {
+    const invoiceNumber = await consumeInvoiceNumber()
     const project = projects.find(p => p.id === group.projectId)
     const doc = buildPDF(invoiceNumber, settings, project, group.entries, projects)
 
     const slug = (project?.name || 'geen-project').toLowerCase().replace(/[^a-z0-9]+/g, '-')
     doc.save(`factuur-${invoiceNumber}-${slug}-${group.month}.pdf`)
 
-    const newRecord = {
+    await addInvoice({
       id: generateId(),
       projectId: group.projectId,
       month: group.month,
       invoiceNumber,
       generatedAt: Date.now(),
       status: 'gefactureerd',
-    }
-    const updated = [...invoices, newRecord]
-    saveInvoices(updated)
-    setInvoices(updated)
+    })
   }
 
-  function handleGeneratePDF(group) {
+  async function handleGeneratePDF(group) {
     if (!isSettingsComplete(invoiceSettings)) {
       setPendingGroup(group)
       setShowSettings(true)
       return
     }
-    doGeneratePDF(group, invoiceSettings)
+    await doGeneratePDF(group, invoiceSettings)
   }
 
-  function handleSaveSettings(settings) {
-    saveInvoiceSettings(settings)
-    setInvoiceSettings(settings)
+  async function handleSaveSettings(settings) {
+    await saveInvoiceSettings(settings)
     setShowSettings(false)
     const pending = pendingGroup
     setPendingGroup(null)
