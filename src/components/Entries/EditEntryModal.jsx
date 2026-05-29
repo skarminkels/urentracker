@@ -19,8 +19,13 @@ export default function EditEntryModal({ entry, projects, onSave, onClose }) {
   const handleSubmit = (e) => {
     e.preventDefault()
     setError('')
-    const startTs = new Date(`${date}T${startTime}`).getTime()
-    const endTs = endTime ? new Date(`${date}T${endTime}`).getTime() : null
+    const startTs = new Date(`${date}T${startTime}:00`).getTime()
+    const endTs = endTime ? new Date(`${date}T${endTime}:00`).getTime() : null
+
+    if (isNaN(startTs) || (endTs !== null && isNaN(endTs))) {
+      setError('Invalid time format. Use HH:MM.')
+      return
+    }
 
     if (endTs && endTs <= startTs) {
       setError('End time must be after start time.')

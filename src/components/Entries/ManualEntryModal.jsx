@@ -15,8 +15,13 @@ export default function ManualEntryModal({ projects, onAdd, onClose }) {
     e.preventDefault()
     setError('')
 
-    const startTs = new Date(`${date}T${startTime}`).getTime()
-    const endTs = new Date(`${date}T${endTime}`).getTime()
+    const startTs = new Date(`${date}T${startTime}:00`).getTime()
+    const endTs = new Date(`${date}T${endTime}:00`).getTime()
+
+    if (isNaN(startTs) || isNaN(endTs)) {
+      setError('Invalid time format. Use HH:MM.')
+      return
+    }
 
     if (endTs <= startTs) {
       setError('End time must be after start time.')
