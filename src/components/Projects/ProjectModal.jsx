@@ -19,10 +19,12 @@ export default function ProjectModal({ project, currency, onSave, onClose }) {
     project?.maxHoursPerMonth ? String(project.maxHoursPerMonth) : ''
   )
   const [rateError, setRateError] = useState('')
+  const [clientErrors, setClientErrors] = useState({})
 
   const handleSubmit = (e) => {
     e.preventDefault()
     setRateError('')
+    setClientErrors({})
 
     const rate = hourlyRate === '' ? 0 : parseFloat(hourlyRate.replace(',', '.'))
     if (hourlyRate !== '' && (isNaN(rate) || rate < 0)) {
@@ -30,6 +32,16 @@ export default function ProjectModal({ project, currency, onSave, onClose }) {
       return
     }
     if (!name.trim()) return
+
+    if (rate > 0) {
+      const errs = {}
+      if (!client.trim()) errs.client = 'Verplicht voor facturatie.'
+      if (!clientAddress.trim()) errs.clientAddress = 'Verplicht voor facturatie.'
+      if (Object.keys(errs).length > 0) {
+        setClientErrors(errs)
+        return
+      }
+    }
 
     onSave({
       name: name.trim(),
@@ -84,25 +96,31 @@ export default function ProjectModal({ project, currency, onSave, onClose }) {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1.5">Client (optional)</label>
+            <label className="block text-xs font-medium text-gray-500 mb-1.5">
+              Klant *
+            </label>
             <input
               type="text"
               value={client}
-              onChange={e => setClient(e.target.value)}
+              onChange={e => { setClient(e.target.value); setClientErrors(ce => ({ ...ce, client: undefined })) }}
               placeholder="e.g. Acme Corp"
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-[#c95da7] transition-colors"
+              className={`w-full px-4 py-3 rounded-xl border text-sm outline-none focus:border-[#c95da7] transition-colors ${clientErrors.client ? 'border-red-400' : 'border-gray-200'}`}
             />
+            {clientErrors.client && <p className="text-red-500 text-xs mt-1">{clientErrors.client}</p>}
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1.5">Adres klant (optioneel)</label>
+            <label className="block text-xs font-medium text-gray-500 mb-1.5">
+              Adres klant *
+            </label>
             <textarea
               rows={3}
               value={clientAddress}
-              onChange={e => setClientAddress(e.target.value)}
+              onChange={e => { setClientAddress(e.target.value); setClientErrors(ce => ({ ...ce, clientAddress: undefined })) }}
               placeholder={"Straat 1\n1000 Brussel"}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-[#c95da7] transition-colors resize-none"
+              className={`w-full px-4 py-3 rounded-xl border text-sm outline-none focus:border-[#c95da7] transition-colors resize-none ${clientErrors.clientAddress ? 'border-red-400' : 'border-gray-200'}`}
             />
+            {clientErrors.clientAddress && <p className="text-red-500 text-xs mt-1">{clientErrors.clientAddress}</p>}
           </div>
 
           <div>
