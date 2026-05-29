@@ -116,20 +116,30 @@ export default function EditEntryModal({ entry, projects, onSave, onClose }) {
             <div>
               <label className="block text-xs font-medium text-gray-500 mb-1.5">Start</label>
               <input
-                type="time"
-                lang="nl-BE"
+                type="text"
+                inputMode="numeric"
+                placeholder="HH:MM"
                 value={startTime}
                 onChange={e => setStartTime(e.target.value)}
+                onBlur={e => {
+                  const m = e.target.value.replace(/[^0-9]/g, '')
+                  if (m.length === 4) setStartTime(`${m.slice(0,2)}:${m.slice(2)}`)
+                }}
                 className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-[#c95da7] transition-colors"
               />
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-500 mb-1.5">End</label>
               <input
-                type="time"
-                lang="nl-BE"
+                type="text"
+                inputMode="numeric"
+                placeholder="HH:MM"
                 value={endTime}
                 onChange={e => setEndTime(e.target.value)}
+                onBlur={e => {
+                  const m = e.target.value.replace(/[^0-9]/g, '')
+                  if (m.length === 4) setEndTime(`${m.slice(0,2)}:${m.slice(2)}`)
+                }}
                 className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-[#c95da7] transition-colors"
               />
             </div>
