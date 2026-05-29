@@ -34,6 +34,7 @@ export default function App() {
 
 function MainApp({ userId }) {
   const [page, setPage] = useState('timer')
+  const [pendingEditProjectId, setPendingEditProjectId] = useState(null)
   const state = useAppState(userId)
 
   if (state.loading) {
@@ -82,6 +83,7 @@ function MainApp({ userId }) {
             updateInvoice={state.updateInvoice}
             saveInvoiceSettings={state.saveInvoiceSettings}
             consumeInvoiceNumber={state.consumeInvoiceNumber}
+            onEditProject={(id) => { setPendingEditProjectId(id); setPage('projects') }}
           />
         )}
         {page === 'projects' && (
@@ -93,6 +95,8 @@ function MainApp({ userId }) {
             addProject={state.addProject}
             updateProject={state.updateProject}
             deleteProject={state.deleteProject}
+            initialEditProjectId={pendingEditProjectId}
+            onClearPendingEdit={() => setPendingEditProjectId(null)}
           />
         )}
       </main>

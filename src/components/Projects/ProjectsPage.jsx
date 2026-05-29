@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Plus, Pencil, Trash2 } from 'lucide-react'
 import ProjectModal from './ProjectModal'
 import { CURRENCIES, formatCurrency } from '../../utils/currency'
@@ -7,9 +7,20 @@ import { formatDurationShort } from '../../utils/time'
 export default function ProjectsPage({
   projects, entries, currency, setCurrency,
   addProject, updateProject, deleteProject,
+  initialEditProjectId, onClearPendingEdit,
 }) {
   const [showModal, setShowModal] = useState(false)
   const [editingProject, setEditingProject] = useState(null)
+
+  useEffect(() => {
+    if (!initialEditProjectId || projects.length === 0) return
+    const project = projects.find(p => p.id === initialEditProjectId)
+    if (project) {
+      setEditingProject(project)
+      setShowModal(true)
+      onClearPendingEdit?.()
+    }
+  }, [initialEditProjectId, projects])
 
   const getStats = (projectId) => {
     const proj_entries = entries.filter(e => e.projectId === projectId && e.endTime)
