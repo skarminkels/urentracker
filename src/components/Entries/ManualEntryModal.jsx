@@ -114,6 +114,7 @@ export default function ManualEntryModal({ projects, onAdd, onClose }) {
               <label className="block text-xs font-medium text-gray-500 mb-1.5">Start</label>
               <input
                 type="time"
+                lang="nl-BE"
                 value={startTime}
                 onChange={e => setStartTime(e.target.value)}
                 className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-[#c95da7] transition-colors"
@@ -123,6 +124,7 @@ export default function ManualEntryModal({ projects, onAdd, onClose }) {
               <label className="block text-xs font-medium text-gray-500 mb-1.5">End</label>
               <input
                 type="time"
+                lang="nl-BE"
                 value={endTime}
                 onChange={e => setEndTime(e.target.value)}
                 className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-[#c95da7] transition-colors"
