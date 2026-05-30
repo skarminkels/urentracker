@@ -2,8 +2,16 @@ import { useState } from 'react'
 import { X } from 'lucide-react'
 
 const PRESET_COLORS = [
-  '#ef8e78', '#f1c93b', '#4a9eff', '#34d399', '#f97316',
-  '#a8786e', '#82b8a0', '#b8a88c', '#7b9cbf', '#c5895a',
+  '#ef8e78', // coral
+  '#f1c93b', // gold
+  '#f97316', // amber orange
+  '#c5895a', // copper
+  '#a8786e', // terracotta
+  '#c47878', // dusty rose
+  '#82b8a0', // sage
+  '#9a9e70', // olive
+  '#b8a88c', // sand
+  '#7a95aa', // slate
 ]
 
 export default function ProjectModal({ project, currency, onSave, onClose }) {
