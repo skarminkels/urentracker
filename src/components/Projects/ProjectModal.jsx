@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { X } from 'lucide-react'
 
 const PRESET_COLORS = [
-  '#6B5CF6', '#A855F7', '#4a9eff', '#34d399', '#f97316',
-  '#EF4444', '#a78bfa', '#fbbf24', '#06b6d4', '#84cc16',
+  '#ef8e78', '#f1c93b', '#4a9eff', '#34d399', '#f97316',
+  '#a8786e', '#82b8a0', '#b8a88c', '#7b9cbf', '#c5895a',
 ]
 
 export default function ProjectModal({ project, currency, onSave, onClose }) {
@@ -55,23 +55,47 @@ export default function ProjectModal({ project, currency, onSave, onClose }) {
     onClose()
   }
 
-  const inputClass = 'w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-[#6B5CF6] focus:ring-2 focus:ring-[#6B5CF6]/15 transition-[border-color,box-shadow] duration-150'
+  const inputClass = 'w-full px-4 py-3 rounded-xl text-sm outline-none transition-[border-color,box-shadow] duration-150'
+  const inputStyle = {
+    backgroundColor: '#faf8f4',
+    border: '1px solid rgba(43,42,39,0.12)',
+    color: '#2b2a27',
+  }
+  const inputStyleError = {
+    ...inputStyle,
+    border: '1px solid #EF4444',
+  }
+
+  const onFocus = e => e.currentTarget.style.boxShadow = '0 0 0 3px rgba(241,201,59,0.30)'
+  const onBlur = e => e.currentTarget.style.boxShadow = ''
 
   return (
-    <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4 modal-backdrop">
-      <div className="bg-white rounded-2xl w-full max-w-md max-h-[90vh] overflow-y-auto modal-content" style={{ boxShadow: '0 32px 64px rgba(15,23,42,0.18)' }}>
-        <div className="flex items-center justify-between p-6 border-b border-gray-100">
-          <h2 className="text-lg font-semibold text-[#111827]">
+    <div className="fixed inset-0 bg-black/30 z-50 flex items-center justify-center p-4 modal-backdrop">
+      <div
+        className="rounded-2xl w-full max-w-md max-h-[90vh] overflow-y-auto modal-content"
+        style={{ backgroundColor: '#f6f3ee', boxShadow: '0 32px 64px rgba(55,44,22,0.14)' }}
+      >
+        <div
+          className="flex items-center justify-between p-6"
+          style={{ borderBottom: '1px solid rgba(43,42,39,0.07)' }}
+        >
+          <h2 className="text-lg font-semibold" style={{ color: '#2b2a27' }}>
             {project ? 'Edit project' : 'New project'}
           </h2>
-          <button onClick={onClose} className="text-[#6B7280] hover:text-[#111827] transition-colors duration-150 rounded-lg p-1 hover:bg-gray-100">
+          <button
+            onClick={onClose}
+            className="rounded-lg p-1 transition-colors duration-150"
+            style={{ color: '#7c776f' }}
+            onMouseEnter={e => { e.currentTarget.style.color = '#2b2a27'; e.currentTarget.style.backgroundColor = '#e6e0d7' }}
+            onMouseLeave={e => { e.currentTarget.style.color = '#7c776f'; e.currentTarget.style.backgroundColor = '' }}
+          >
             <X size={20} />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
-            <label className="block text-xs font-medium text-[#6B7280] mb-1.5">Project name</label>
+            <label className="block text-xs font-medium mb-1.5" style={{ color: '#7c776f' }}>Project name</label>
             <input
               type="text"
               value={name}
@@ -79,26 +103,32 @@ export default function ProjectModal({ project, currency, onSave, onClose }) {
               placeholder="e.g. Design"
               autoFocus
               className={inputClass}
+              style={inputStyle}
+              onFocus={onFocus}
+              onBlur={onBlur}
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-[#6B7280] mb-2">Color</label>
+            <label className="block text-xs font-medium mb-2" style={{ color: '#7c776f' }}>Color</label>
             <div className="flex gap-2 flex-wrap">
               {PRESET_COLORS.map(c => (
                 <button
                   key={c}
                   type="button"
                   onClick={() => setColor(c)}
-                  className={`w-7 h-7 rounded-full transition-transform duration-150 ${color === c ? 'scale-125 ring-2 ring-offset-2 ring-gray-400' : 'hover:scale-110'}`}
-                  style={{ backgroundColor: c }}
+                  className={`w-7 h-7 rounded-full transition-transform duration-150 ${color === c ? 'scale-125' : 'hover:scale-110'}`}
+                  style={{
+                    backgroundColor: c,
+                    boxShadow: color === c ? `0 0 0 2px #f6f3ee, 0 0 0 4px ${c}` : 'none',
+                  }}
                 />
               ))}
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-[#6B7280] mb-1.5">
+            <label className="block text-xs font-medium mb-1.5" style={{ color: '#7c776f' }}>
               Klant *
             </label>
             <input
@@ -106,13 +136,16 @@ export default function ProjectModal({ project, currency, onSave, onClose }) {
               value={client}
               onChange={e => { setClient(e.target.value); setClientErrors(ce => ({ ...ce, client: undefined })) }}
               placeholder="e.g. Acme Corp"
-              className={`${inputClass} ${clientErrors.client ? '!border-[#EF4444]' : ''}`}
+              className={inputClass}
+              style={clientErrors.client ? inputStyleError : inputStyle}
+              onFocus={onFocus}
+              onBlur={onBlur}
             />
-            {clientErrors.client && <p className="text-[#EF4444] text-xs mt-1">{clientErrors.client}</p>}
+            {clientErrors.client && <p className="text-xs mt-1" style={{ color: '#EF4444' }}>{clientErrors.client}</p>}
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-[#6B7280] mb-1.5">
+            <label className="block text-xs font-medium mb-1.5" style={{ color: '#7c776f' }}>
               Adres klant *
             </label>
             <textarea
@@ -120,28 +153,42 @@ export default function ProjectModal({ project, currency, onSave, onClose }) {
               value={clientAddress}
               onChange={e => { setClientAddress(e.target.value); setClientErrors(ce => ({ ...ce, clientAddress: undefined })) }}
               placeholder={"Straat 1\n1000 Brussel"}
-              className={`${inputClass} resize-none ${clientErrors.clientAddress ? '!border-[#EF4444]' : ''}`}
+              className={`${inputClass} resize-none`}
+              style={clientErrors.clientAddress ? inputStyleError : inputStyle}
+              onFocus={onFocus}
+              onBlur={onBlur}
             />
-            {clientErrors.clientAddress && <p className="text-[#EF4444] text-xs mt-1">{clientErrors.clientAddress}</p>}
+            {clientErrors.clientAddress && <p className="text-xs mt-1" style={{ color: '#EF4444' }}>{clientErrors.clientAddress}</p>}
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-[#6B7280] mb-1.5">BTW-nummer klant (optioneel)</label>
+            <label className="block text-xs font-medium mb-1.5" style={{ color: '#7c776f' }}>BTW-nummer klant (optioneel)</label>
             <input
               type="text"
               value={clientVAT}
               onChange={e => setClientVAT(e.target.value)}
               placeholder="BE 0123.456.789"
               className={inputClass}
+              style={inputStyle}
+              onFocus={onFocus}
+              onBlur={onBlur}
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-[#6B7280] mb-1.5">
+            <label className="block text-xs font-medium mb-1.5" style={{ color: '#7c776f' }}>
               Hourly rate (optional)
             </label>
             <div className="flex items-center gap-0">
-              <span className="inline-flex items-center px-3.5 py-3 bg-gray-50 border border-r-0 border-gray-200 rounded-l-xl text-sm text-[#6B7280] font-medium">
+              <span
+                className="inline-flex items-center px-3.5 py-3 rounded-l-xl text-sm font-medium"
+                style={{
+                  backgroundColor: '#e6e0d7',
+                  border: '1px solid rgba(43,42,39,0.12)',
+                  borderRight: 'none',
+                  color: '#7c776f',
+                }}
+              >
                 {currency}/u
               </span>
               <input
@@ -154,14 +201,17 @@ export default function ProjectModal({ project, currency, onSave, onClose }) {
                 placeholder="0"
                 min="0"
                 step="0.01"
-                className="flex-1 px-4 py-3 rounded-r-xl border border-gray-200 text-sm outline-none focus:border-[#6B5CF6] focus:ring-2 focus:ring-[#6B5CF6]/15 transition-[border-color,box-shadow] duration-150"
+                className="flex-1 px-4 py-3 rounded-r-xl text-sm outline-none transition-[border-color,box-shadow] duration-150"
+                style={inputStyle}
+                onFocus={onFocus}
+                onBlur={onBlur}
               />
             </div>
-            {rateError && <p className="text-[#EF4444] text-xs mt-1">{rateError}</p>}
+            {rateError && <p className="text-xs mt-1" style={{ color: '#EF4444' }}>{rateError}</p>}
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-[#6B7280] mb-1.5">
+            <label className="block text-xs font-medium mb-1.5" style={{ color: '#7c776f' }}>
               Max uren per maand (optioneel)
             </label>
             <input
@@ -172,6 +222,9 @@ export default function ProjectModal({ project, currency, onSave, onClose }) {
               min="0"
               step="0.5"
               className={inputClass}
+              style={inputStyle}
+              onFocus={onFocus}
+              onBlur={onBlur}
             />
           </div>
 
@@ -179,13 +232,19 @@ export default function ProjectModal({ project, currency, onSave, onClose }) {
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2.5 rounded-full border border-gray-200 text-sm font-medium text-[#6B7280] hover:bg-gray-50 transition-[transform,background-color] duration-150 active:scale-[0.97]"
+              className="flex-1 py-2.5 rounded-full text-sm font-medium transition-[transform,background-color] duration-150 active:scale-[0.97]"
+              style={{ border: '1px solid rgba(43,42,39,0.12)', color: '#7c776f' }}
+              onMouseEnter={e => e.currentTarget.style.backgroundColor = '#e6e0d7'}
+              onMouseLeave={e => e.currentTarget.style.backgroundColor = ''}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 py-2.5 rounded-full bg-[#6B5CF6] hover:bg-[#5347d4] text-white text-sm font-medium transition-[transform,background-color] duration-150 active:scale-[0.97]"
+              className="flex-1 py-2.5 rounded-full text-sm font-medium text-white transition-[transform,background-color] duration-150 active:scale-[0.97]"
+              style={{ backgroundColor: '#20242c' }}
+              onMouseEnter={e => e.currentTarget.style.backgroundColor = '#2d3340'}
+              onMouseLeave={e => e.currentTarget.style.backgroundColor = '#20242c'}
             >
               {project ? 'Save' : 'Create'}
             </button>

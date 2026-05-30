@@ -8,21 +8,29 @@ export default {
     extend: {
       colors: {
         brand: {
-          primary:        '#6B5CF6',
-          'primary-dark': '#5347d4',
-          'primary-soft': '#F1EEFF',
-          sidebar:        '#151821',
-          success:        '#22C55E',
-          warning:        '#FACC15',
-          danger:         '#EF4444',
-          muted:          '#6B7280',
+          page:             '#e8e4dd',
+          shell:            '#f6f3ee',
+          surface:          '#f1ede6',
+          'surface-soft':   '#faf8f4',
+          'surface-inset':  '#e6e0d7',
+          dark:             '#20242c',
+          text:             '#2b2a27',
+          muted:            '#7c776f',
+          inverse:          '#f6f2eb',
+          accent:           '#f1c93b',
+          secondary:        '#ef8e78',
+          neutral:          '#4a4a45',
+          success:          '#22C55E',
+          danger:           '#EF4444',
         }
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
       },
       boxShadow: {
-        card: '0 20px 40px rgba(15, 23, 42, 0.08)',
+        card:  '0 20px 40px rgba(55, 44, 22, 0.07)',
+        hover: '0 18px 40px rgba(55, 44, 22, 0.10)',
+        modal: '0 32px 64px rgba(55, 44, 22, 0.14)',
       },
     },
   },

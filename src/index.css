@@ -4,20 +4,30 @@
 
 /* ── Design tokens ──────────────────────────────────────────────────────────── */
 :root {
-  --color-bg:           #F5F5F7;
-  --color-bg-alt:       #FFFFFF;
-  --color-surface-dark: #151821;
-  --color-primary:      #6B5CF6;
-  --color-primary-dark: #5347d4;
-  --color-primary-soft: #F1EEFF;
-  --color-text-main:    #111827;
-  --color-text-muted:   #6B7280;
-  --color-success:      #22C55E;
-  --color-warning:      #FACC15;
-  --color-danger:       #EF4444;
-  --shadow-card:        0 20px 40px rgba(15, 23, 42, 0.08);
-  --ease-out:           cubic-bezier(0.23, 1, 0.32, 1);
-  --ease-in-out:        cubic-bezier(0.77, 0, 0.175, 1);
+  --color-page:           #e8e4dd;
+  --color-shell:          #f6f3ee;
+  --color-surface:        #f1ede6;
+  --color-surface-soft:   #faf8f4;
+  --color-surface-inset:  #e6e0d7;
+  --color-dark:           #20242c;
+  --color-text:           #2b2a27;
+  --color-text-muted:     #7c776f;
+  --color-text-inverse:   #f6f2eb;
+  --color-accent:         #f1c93b;
+  --color-accent-secondary: #ef8e78;
+  --color-accent-neutral: #4a4a45;
+  --color-divider:        rgba(43, 42, 39, 0.08);
+  --color-success:        #22C55E;
+  --color-danger:         #EF4444;
+  --shadow-soft:          0 12px 32px rgba(55, 44, 22, 0.06);
+  --shadow-card:          0 20px 40px rgba(55, 44, 22, 0.07);
+  --shadow-hover:         0 18px 40px rgba(55, 44, 22, 0.1);
+  --shadow-modal:         0 32px 64px rgba(55, 44, 22, 0.14);
+  --ease-standard:        cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-soft:            cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast:             160ms;
+  --dur-med:              240ms;
+  --dur-slow:             360ms;
 }
 
 * {
@@ -29,8 +39,14 @@ body {
   padding: 0;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
-  background: var(--color-bg);
-  color: var(--color-text-main);
+  background: var(--color-page);
+  color: var(--color-text);
+}
+
+/* ── Focus ──────────────────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(241, 201, 59, 0.35);
 }
 
 /* ── Modal entrance ─────────────────────────────────────────────────────────── */
@@ -40,45 +56,49 @@ body {
 }
 
 @keyframes modal-content-in {
-  from { opacity: 0; transform: scale(0.95) translateY(4px); }
+  from { opacity: 0; transform: scale(0.97) translateY(6px); }
   to   { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 .modal-backdrop {
-  animation: modal-backdrop-in 150ms ease-out;
+  animation: modal-backdrop-in var(--dur-fast) ease-out;
 }
 
 .modal-content {
-  animation: modal-content-in 220ms var(--ease-out);
+  animation: modal-content-in var(--dur-med) var(--ease-standard);
   transform-origin: center;
 }
 
 /* ── Dropdown / popover entrance ───────────────────────────────────────────── */
 @keyframes dropdown-in {
-  from { opacity: 0; transform: scale(0.95) translateY(-4px); }
+  from { opacity: 0; transform: scale(0.96) translateY(-4px); }
   to   { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 .dropdown-content {
-  animation: dropdown-in 150ms var(--ease-out);
+  animation: dropdown-in var(--dur-fast) var(--ease-standard);
   transform-origin: top left;
 }
 
-/* ── Touch-safe hover: shadow lift on cards ─────────────────────────────────── */
+/* ── Interactive panel: soft lift on hover ──────────────────────────────────── */
 .card-lift {
-  transition: box-shadow 200ms ease-out;
+  transition:
+    transform var(--dur-med) var(--ease-standard),
+    box-shadow var(--dur-med) var(--ease-standard);
 }
 @media (hover: hover) and (pointer: fine) {
   .card-lift:hover {
-    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
   }
 }
 
 /* ── Reduced motion ─────────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  .modal-backdrop,
-  .modal-content,
-  .dropdown-content {
-    animation: none;
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

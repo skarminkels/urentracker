@@ -35,27 +35,33 @@ function formatMonthYear(ts) {
 
 // ─── sub-components ────────────────────────────────────────────────────────────
 
+const cardStyle = {
+  backgroundColor: '#f6f3ee',
+  boxShadow: '0 20px 40px rgba(55,44,22,0.06)',
+  border: '1px solid rgba(43,42,39,0.06)',
+}
+
 function EarningsCard({ label, amount, hours, subtitle, large, currency }) {
   return (
-    <div className="bg-white rounded-2xl p-5 flex flex-col gap-1" style={{ boxShadow: '0 20px 40px rgba(15,23,42,0.06)', border: '1px solid rgba(15,23,42,0.05)' }}>
-      <p className="text-xs font-semibold text-[#6B7280] uppercase tracking-wide">{label}</p>
-      <p className={`font-bold text-[#6B5CF6] ${large ? 'text-3xl' : 'text-xl'}`}>
+    <div className="rounded-2xl p-5 flex flex-col gap-1" style={cardStyle}>
+      <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#7c776f' }}>{label}</p>
+      <p className={`font-bold ${large ? 'text-3xl' : 'text-xl'}`} style={{ color: '#2b2a27' }}>
         {formatCurrency(amount, currency)}
       </p>
-      <p className="text-xs text-[#6B7280]">{formatHours(hours)} · {subtitle}</p>
+      <p className="text-xs" style={{ color: '#7c776f' }}>{formatHours(hours)} · {subtitle}</p>
     </div>
   )
 }
 
 function StatCard({ icon: Icon, label, value, color }) {
   return (
-    <div className="bg-white rounded-2xl px-6 py-5 flex items-center gap-4" style={{ boxShadow: '0 20px 40px rgba(15,23,42,0.06)', border: '1px solid rgba(15,23,42,0.05)' }}>
+    <div className="rounded-2xl px-6 py-5 flex items-center gap-4" style={cardStyle}>
       <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: color + '18' }}>
         <Icon size={20} style={{ color }} />
       </div>
       <div>
-        <p className="text-xs font-medium text-[#6B7280] uppercase tracking-wide">{label}</p>
-        <p className="text-2xl font-bold text-[#111827] mt-0.5">{value}</p>
+        <p className="text-xs font-medium uppercase tracking-wide" style={{ color: '#7c776f' }}>{label}</p>
+        <p className="text-2xl font-bold mt-0.5" style={{ color: '#2b2a27' }}>{value}</p>
       </div>
     </div>
   )
@@ -63,27 +69,27 @@ function StatCard({ icon: Icon, label, value, color }) {
 
 function TimeBarChart({ days, data, maxMs }) {
   return (
-    <div className="bg-white rounded-2xl p-6" style={{ boxShadow: '0 20px 40px rgba(15,23,42,0.06)', border: '1px solid rgba(15,23,42,0.05)' }}>
-      <h2 className="text-sm font-semibold text-[#111827] mb-6">Last 7 days — time</h2>
+    <div className="rounded-2xl p-6" style={cardStyle}>
+      <h2 className="text-sm font-semibold mb-6" style={{ color: '#2b2a27' }}>Last 7 days — time</h2>
       <div className="flex items-end gap-2 h-36">
         {days.map(day => {
           const ms = data[day.key] || 0
           const pct = maxMs > 0 ? (ms / maxMs) * 100 : 0
           return (
             <div key={day.key} className="flex-1 flex flex-col items-center gap-1.5">
-              <span className="text-xs text-[#6B7280]">{formatHours(ms)}</span>
+              <span className="text-xs" style={{ color: '#7c776f' }}>{formatHours(ms)}</span>
               <div className="w-full flex flex-col justify-end" style={{ height: '80px' }}>
                 <div
                   className="w-full rounded-t-lg transition-[height,background-color] duration-300 ease-out"
                   style={{
                     height: `${Math.max(pct, ms > 0 ? 4 : 0)}%`,
-                    backgroundColor: '#6B5CF6',
-                    opacity: ms > 0 ? 1 : 0.12,
+                    backgroundColor: '#f1c93b',
+                    opacity: ms > 0 ? 1 : 0.2,
                     minHeight: ms > 0 ? '4px' : '0',
                   }}
                 />
               </div>
-              <span className="text-xs text-[#6B7280]">{day.label}</span>
+              <span className="text-xs" style={{ color: '#7c776f' }}>{day.label}</span>
             </div>
           )
         })}
@@ -95,7 +101,7 @@ function TimeBarChart({ days, data, maxMs }) {
 function PieChart({ slices }) {
   if (slices.length === 0) {
     return (
-      <div className="bg-white rounded-2xl p-6 flex items-center justify-center text-gray-300 h-64" style={{ boxShadow: '0 20px 40px rgba(15,23,42,0.06)', border: '1px solid rgba(15,23,42,0.05)' }}>
+      <div className="rounded-2xl p-6 flex items-center justify-center h-64" style={{ ...cardStyle, color: '#c0b8ae' }}>
         No data
       </div>
     )
@@ -113,8 +119,8 @@ function PieChart({ slices }) {
     return { x: 50 + 40 * Math.cos(angle), y: 50 + 40 * Math.sin(angle) }
   }
   return (
-    <div className="bg-white rounded-2xl p-6" style={{ boxShadow: '0 20px 40px rgba(15,23,42,0.06)', border: '1px solid rgba(15,23,42,0.05)' }}>
-      <h2 className="text-sm font-semibold text-[#111827] mb-6">By project — time this week</h2>
+    <div className="rounded-2xl p-6" style={cardStyle}>
+      <h2 className="text-sm font-semibold mb-6" style={{ color: '#2b2a27' }}>By project — time this week</h2>
       <div className="flex items-center gap-6">
         <svg viewBox="0 0 100 100" className="w-36 h-36 shrink-0">
           {segments.map((s, i) => {
@@ -126,15 +132,15 @@ function PieChart({ slices }) {
               <path key={i} d={`M 50 50 L ${start.x} ${start.y} A 40 40 0 ${large} 1 ${end.x} ${end.y} Z`} fill={s.color} />
             )
           })}
-          <circle cx="50" cy="50" r="22" fill="white" />
+          <circle cx="50" cy="50" r="22" fill="#f6f3ee" />
         </svg>
         <div className="flex-1 space-y-2">
           {segments.map((s, i) => (
             <div key={i} className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: s.color }} />
-              <span className="text-sm text-[#6B7280] flex-1 truncate">{s.label}</span>
-              <span className="text-xs font-medium text-[#111827]">{formatHours(s.value)}</span>
-              <span className="text-xs text-gray-300">{Math.round(s.pct * 100)}%</span>
+              <span className="text-sm flex-1 truncate" style={{ color: '#7c776f' }}>{s.label}</span>
+              <span className="text-xs font-medium" style={{ color: '#2b2a27' }}>{formatHours(s.value)}</span>
+              <span className="text-xs" style={{ color: '#c0b8ae' }}>{Math.round(s.pct * 100)}%</span>
             </div>
           ))}
         </div>
@@ -145,8 +151,8 @@ function PieChart({ slices }) {
 
 function EarningsMonthChart({ months, data, maxEarnings, currency }) {
   return (
-    <div className="bg-white rounded-2xl p-6" style={{ boxShadow: '0 20px 40px rgba(15,23,42,0.06)', border: '1px solid rgba(15,23,42,0.05)' }}>
-      <h2 className="text-sm font-semibold text-[#111827] mb-6">Earnings per month</h2>
+    <div className="rounded-2xl p-6" style={cardStyle}>
+      <h2 className="text-sm font-semibold mb-6" style={{ color: '#2b2a27' }}>Earnings per month</h2>
       <div className="flex items-end gap-1.5 h-40">
         {months.map(month => {
           const amount = data[month.key] || 0
@@ -154,7 +160,7 @@ function EarningsMonthChart({ months, data, maxEarnings, currency }) {
           return (
             <div key={month.key} className="flex-1 flex flex-col items-center gap-1.5 min-w-0">
               {amount > 0 && (
-                <span className="text-xs text-[#6B7280] truncate w-full text-center">
+                <span className="text-xs truncate w-full text-center" style={{ color: '#7c776f' }}>
                   {formatCurrency(amount, currency).replace(/[€$£]/, '')}
                 </span>
               )}
@@ -163,12 +169,12 @@ function EarningsMonthChart({ months, data, maxEarnings, currency }) {
                   className="w-full rounded-t-lg transition-[height] duration-300 ease-out"
                   style={{
                     height: `${Math.max(pct, amount > 0 ? 5 : 0)}%`,
-                    background: amount > 0 ? 'linear-gradient(180deg, #6B5CF6 0%, #A855F7 100%)' : '#F5F5F7',
+                    backgroundColor: amount > 0 ? '#f1c93b' : '#e6e0d7',
                     minHeight: amount > 0 ? '4px' : '0',
                   }}
                 />
               </div>
-              <span className="text-xs text-[#6B7280] truncate w-full text-center">{month.label}</span>
+              <span className="text-xs truncate w-full text-center" style={{ color: '#7c776f' }}>{month.label}</span>
             </div>
           )
         })}
@@ -180,7 +186,7 @@ function EarningsMonthChart({ months, data, maxEarnings, currency }) {
 function EarningsProjectChart({ slices, currency }) {
   if (slices.length === 0) {
     return (
-      <div className="bg-white rounded-2xl p-6 flex items-center justify-center text-gray-300 min-h-48" style={{ boxShadow: '0 20px 40px rgba(15,23,42,0.06)', border: '1px solid rgba(15,23,42,0.05)' }}>
+      <div className="rounded-2xl p-6 flex items-center justify-center min-h-48" style={{ ...cardStyle, color: '#c0b8ae' }}>
         No billable entries this month
       </div>
     )
@@ -188,8 +194,8 @@ function EarningsProjectChart({ slices, currency }) {
   const total = slices.reduce((s, x) => s + x.earnings, 0)
   const max = slices[0].earnings
   return (
-    <div className="bg-white rounded-2xl p-6" style={{ boxShadow: '0 20px 40px rgba(15,23,42,0.06)', border: '1px solid rgba(15,23,42,0.05)' }}>
-      <h2 className="text-sm font-semibold text-[#111827] mb-5">Earnings per project — this month</h2>
+    <div className="rounded-2xl p-6" style={cardStyle}>
+      <h2 className="text-sm font-semibold mb-5" style={{ color: '#2b2a27' }}>Earnings per project — this month</h2>
       <div className="space-y-3">
         {slices.map((s, i) => {
           const pct = max > 0 ? (s.earnings / max) * 100 : 0
@@ -199,14 +205,14 @@ function EarningsProjectChart({ slices, currency }) {
               <div className="flex items-center justify-between text-xs">
                 <div className="flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: s.color }} />
-                  <span className="text-[#6B7280]">{s.label}</span>
+                  <span style={{ color: '#7c776f' }}>{s.label}</span>
                 </div>
-                <div className="flex items-center gap-2 text-[#6B7280]">
+                <div className="flex items-center gap-2" style={{ color: '#7c776f' }}>
                   <span className="font-medium">{formatCurrency(s.earnings, currency)}</span>
-                  <span className="text-gray-300">{sharePct}%</span>
+                  <span style={{ color: '#c0b8ae' }}>{sharePct}%</span>
                 </div>
               </div>
-              <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+              <div className="h-2 rounded-full overflow-hidden" style={{ backgroundColor: '#e6e0d7' }}>
                 <div
                   className="h-full rounded-full transition-[width] duration-300 ease-out"
                   style={{ width: `${pct}%`, backgroundColor: s.color }}
@@ -215,9 +221,9 @@ function EarningsProjectChart({ slices, currency }) {
             </div>
           )
         })}
-        <div className="pt-1 border-t border-gray-100 flex justify-between text-xs text-[#6B7280]">
-          <span className="font-medium">Total</span>
-          <span className="font-semibold text-[#6B5CF6]">{formatCurrency(total, currency)}</span>
+        <div className="pt-1 flex justify-between text-xs" style={{ borderTop: '1px solid rgba(43,42,39,0.07)' }}>
+          <span className="font-medium" style={{ color: '#7c776f' }}>Total</span>
+          <span className="font-semibold" style={{ color: '#2b2a27' }}>{formatCurrency(total, currency)}</span>
         </div>
       </div>
     </div>
@@ -251,8 +257,8 @@ function HourCapSection({ projects, entries }) {
   const fmtH = (h) => h.toFixed(1).replace('.', ',')
 
   return (
-    <div className="bg-white rounded-2xl p-6 mb-4" style={{ boxShadow: '0 20px 40px rgba(15,23,42,0.06)', border: '1px solid rgba(15,23,42,0.05)' }}>
-      <h2 className="text-sm font-semibold text-[#111827] mb-4">Uren deze maand per project</h2>
+    <div className="rounded-2xl p-6 mb-4" style={cardStyle}>
+      <h2 className="text-sm font-semibold mb-4" style={{ color: '#2b2a27' }}>Uren deze maand per project</h2>
       <div className="space-y-4">
         {rows.map(({ project, hours, max }) => {
           const pct = max > 0 ? (hours / max) * 100 : 0
@@ -264,22 +270,22 @@ function HourCapSection({ projects, entries }) {
               <div className="flex items-center justify-between mb-1.5">
                 <div className="flex items-center gap-2 min-w-0">
                   <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: project.color }} />
-                  <span className="text-sm text-[#111827] truncate">{project.name}</span>
+                  <span className="text-sm truncate" style={{ color: '#2b2a27' }}>{project.name}</span>
                   {project.client && (
-                    <span className="text-xs text-[#6B7280] truncate hidden sm:inline">{project.client}</span>
+                    <span className="text-xs truncate hidden sm:inline" style={{ color: '#7c776f' }}>{project.client}</span>
                   )}
                 </div>
                 <div className="flex items-center gap-2 shrink-0 ml-3">
                   {overLimit && (
-                    <span className="text-xs text-[#EF4444] font-medium whitespace-nowrap">⚠ limiet overschreden</span>
+                    <span className="text-xs font-medium whitespace-nowrap" style={{ color: '#EF4444' }}>⚠ limiet overschreden</span>
                   )}
-                  <span className="text-sm text-[#6B7280] font-mono whitespace-nowrap">
+                  <span className="text-sm font-mono whitespace-nowrap" style={{ color: '#7c776f' }}>
                     {max > 0 ? `${fmtH(hours)} / ${fmtH(max)} u` : `${fmtH(hours)} u`}
                   </span>
                 </div>
               </div>
               {max > 0 && (
-                <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div className="h-2 rounded-full overflow-hidden" style={{ backgroundColor: '#e6e0d7' }}>
                   <div
                     className="h-full rounded-full transition-[width,background-color] duration-300 ease-out"
                     style={{ width: `${Math.min(pct, 100)}%`, backgroundColor: barColor }}
@@ -324,12 +330,6 @@ export default function ReportsPage({ entries, projects, currency }) {
   const hoursMonth = hoursMs(monthStart)
   const hoursYTD = hoursMs(yearStart)
 
-  const daysWorkedThisWeek = new Set(
-    completedEntries
-      .filter(e => e.startTime >= weekStart)
-      .map(e => getDayKey(e.startTime))
-  ).size
-
   const days7 = getLast7Days()
   const dailyTimeData = useMemo(() => {
     const map = {}
@@ -351,7 +351,7 @@ export default function ReportsPage({ entries, projects, currency }) {
       .filter(([, v]) => v > 0)
       .map(([key, value]) => {
         const p = projects.find(x => x.id === key)
-        return { label: p ? p.name : 'No project', color: p ? p.color : '#d1d5db', value }
+        return { label: p ? p.name : 'No project', color: p ? p.color : '#c0b8ae', value }
       })
       .sort((a, b) => b.value - a.value)
   }, [completedEntries, projects, weekStart])
@@ -380,14 +380,14 @@ export default function ReportsPage({ entries, projects, currency }) {
     return Object.entries(map)
       .map(([key, earnings]) => {
         const p = projects.find(x => x.id === key)
-        return { label: p ? p.name : 'No project', color: p ? p.color : '#d1d5db', earnings }
+        return { label: p ? p.name : 'No project', color: p ? p.color : '#c0b8ae', earnings }
       })
       .sort((a, b) => b.earnings - a.earnings)
   }, [completedEntries, projects, monthStart])
 
   return (
     <div className="flex-1 px-6 py-6 max-w-5xl w-full mx-auto">
-      <h1 className="text-xl font-semibold text-[#111827] mb-5">Reports</h1>
+      <h1 className="text-xl font-semibold mb-5" style={{ color: '#2b2a27' }}>Reports</h1>
 
       {/* ── Earnings KPIs ── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
@@ -425,14 +425,14 @@ export default function ReportsPage({ entries, projects, currency }) {
 
       {/* ── Time stats ── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
-        <StatCard icon={Clock} label="Today" value={formatHours(hoursToday)} color="#6B5CF6" />
-        <StatCard icon={TrendingUp} label="This week" value={formatHours(hoursWeek)} color="#A855F7" />
+        <StatCard icon={Clock} label="Today" value={formatHours(hoursToday)} color="#ef8e78" />
+        <StatCard icon={TrendingUp} label="This week" value={formatHours(hoursWeek)} color="#f1c93b" />
       </div>
 
       {/* ── Hour cap progress ── */}
       <HourCapSection projects={projects} entries={completedEntries} />
 
-      {/* ── Existing charts ── */}
+      {/* ── Charts ── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         <TimeBarChart days={days7} data={dailyTimeData} maxMs={maxDayMs} />
         <PieChart slices={pieSlices} />

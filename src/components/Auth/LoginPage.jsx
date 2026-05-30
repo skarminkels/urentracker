@@ -17,48 +17,79 @@ export default function LoginPage() {
     setLoading(false)
   }
 
+  const inputClass = 'w-full px-4 py-3 rounded-xl text-sm outline-none transition-[border-color,box-shadow] duration-150'
+  const inputStyle = {
+    backgroundColor: '#faf8f4',
+    border: '1px solid rgba(43,42,39,0.12)',
+    color: '#2b2a27',
+  }
+
   return (
-    <div className="min-h-screen bg-[#F5F5F7] flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl w-full max-w-sm p-8" style={{ boxShadow: '0 20px 40px rgba(15,23,42,0.08)', border: '1px solid rgba(15,23,42,0.05)' }}>
+    <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: '#e8e4dd' }}>
+      <div
+        className="rounded-2xl w-full max-w-sm p-8"
+        style={{
+          backgroundColor: '#f6f3ee',
+          boxShadow: '0 20px 40px rgba(55,44,22,0.08)',
+          border: '1px solid rgba(43,42,39,0.06)',
+        }}
+      >
         <div className="flex items-center gap-3 mb-8">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #6B5CF6 0%, #A855F7 100%)' }}>
-            <Clock size={20} className="text-white" />
+          <div
+            className="w-10 h-10 rounded-xl flex items-center justify-center"
+            style={{ backgroundColor: '#f1c93b' }}
+          >
+            <Clock size={20} style={{ color: '#20242c' }} />
           </div>
-          <h1 className="text-xl font-semibold text-[#111827]">Urentracker</h1>
+          <h1 className="text-xl font-semibold" style={{ color: '#2b2a27' }}>Urentracker</h1>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-[#6B7280] mb-1.5">E-mail</label>
+            <label className="block text-xs font-medium mb-1.5" style={{ color: '#7c776f' }}>E-mail</label>
             <input
               type="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
               required
               autoFocus
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-[#6B5CF6] focus:ring-2 focus:ring-[#6B5CF6]/20 transition-[border-color,box-shadow] duration-150"
+              className={inputClass}
+              style={inputStyle}
+              onFocus={e => e.currentTarget.style.boxShadow = '0 0 0 3px rgba(241,201,59,0.30)'}
+              onBlur={e => e.currentTarget.style.boxShadow = ''}
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-[#6B7280] mb-1.5">Wachtwoord</label>
+            <label className="block text-xs font-medium mb-1.5" style={{ color: '#7c776f' }}>Wachtwoord</label>
             <input
               type="password"
               value={password}
               onChange={e => setPassword(e.target.value)}
               required
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-[#6B5CF6] focus:ring-2 focus:ring-[#6B5CF6]/20 transition-[border-color,box-shadow] duration-150"
+              className={inputClass}
+              style={inputStyle}
+              onFocus={e => e.currentTarget.style.boxShadow = '0 0 0 3px rgba(241,201,59,0.30)'}
+              onBlur={e => e.currentTarget.style.boxShadow = ''}
             />
           </div>
 
           {error && (
-            <p className="text-sm text-red-500 bg-red-50 px-4 py-3 rounded-xl">{error}</p>
+            <p
+              className="text-sm px-4 py-3 rounded-xl"
+              style={{ color: '#EF4444', backgroundColor: '#fef2f2', border: '1px solid rgba(239,68,68,0.15)' }}
+            >
+              {error}
+            </p>
           )}
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-xl bg-[#6B5CF6] hover:bg-[#5347d4] text-white text-sm font-medium transition-[transform,background-color] duration-150 active:scale-[0.97] disabled:opacity-60"
+            className="w-full py-3 rounded-xl text-sm font-medium text-white transition-[transform,background-color] duration-150 active:scale-[0.97] disabled:opacity-60"
+            style={{ backgroundColor: '#20242c' }}
+            onMouseEnter={e => { if (!loading) e.currentTarget.style.backgroundColor = '#2d3340' }}
+            onMouseLeave={e => e.currentTarget.style.backgroundColor = '#20242c'}
           >
             {loading ? 'Inloggen…' : 'Inloggen'}
           </button>

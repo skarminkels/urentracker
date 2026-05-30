@@ -39,14 +39,14 @@ function MainApp({ userId }) {
 
   if (state.loading) {
     return (
-      <div className="min-h-screen bg-[#F5F5F7] flex items-center justify-center">
-        <div className="w-6 h-6 rounded-full border-2 border-[#6B5CF6] border-t-transparent animate-spin" />
+      <div className="min-h-screen flex items-center justify-center" style={{ background: '#e8e4dd' }}>
+        <div className="w-6 h-6 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: '#20242c', borderTopColor: 'transparent' }} />
       </div>
     )
   }
 
   return (
-    <div className="flex min-h-screen bg-[#F5F5F7] font-sans">
+    <div className="flex min-h-screen font-sans" style={{ background: '#e8e4dd' }}>
       <Sidebar page={page} setPage={setPage} />
 
       <main className="flex-1 flex flex-col overflow-auto">

@@ -40,14 +40,31 @@ export default function ManualEntryModal({ projects, onAdd, onClose }) {
 
   const activeProject = projects.find(p => p.id === projectId)
 
-  const inputClass = 'w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-[#6B5CF6] focus:ring-2 focus:ring-[#6B5CF6]/15 transition-[border-color,box-shadow] duration-150'
+  const inputClass = 'w-full px-4 py-3 rounded-xl text-sm outline-none transition-[border-color,box-shadow] duration-150'
+  const inputStyle = {
+    backgroundColor: '#faf8f4',
+    border: '1px solid rgba(43,42,39,0.12)',
+    color: '#2b2a27',
+  }
 
   return (
-    <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4 modal-backdrop">
-      <div className="bg-white rounded-2xl w-full max-w-md modal-content" style={{ boxShadow: '0 32px 64px rgba(15,23,42,0.18)' }}>
-        <div className="flex items-center justify-between p-6 border-b border-gray-100">
-          <h2 className="text-lg font-semibold text-[#111827]">Add manual entry</h2>
-          <button onClick={onClose} className="text-[#6B7280] hover:text-[#111827] transition-colors duration-150 rounded-lg p-1 hover:bg-gray-100">
+    <div className="fixed inset-0 bg-black/30 z-50 flex items-center justify-center p-4 modal-backdrop">
+      <div
+        className="rounded-2xl w-full max-w-md modal-content"
+        style={{ backgroundColor: '#f6f3ee', boxShadow: '0 32px 64px rgba(55,44,22,0.14)' }}
+      >
+        <div
+          className="flex items-center justify-between p-6"
+          style={{ borderBottom: '1px solid rgba(43,42,39,0.07)' }}
+        >
+          <h2 className="text-lg font-semibold" style={{ color: '#2b2a27' }}>Add manual entry</h2>
+          <button
+            onClick={onClose}
+            className="rounded-lg p-1 transition-colors duration-150"
+            style={{ color: '#7c776f' }}
+            onMouseEnter={e => { e.currentTarget.style.color = '#2b2a27'; e.currentTarget.style.backgroundColor = '#e6e0d7' }}
+            onMouseLeave={e => { e.currentTarget.style.color = '#7c776f'; e.currentTarget.style.backgroundColor = '' }}
+          >
             <X size={20} />
           </button>
         </div>
@@ -59,34 +76,46 @@ export default function ManualEntryModal({ projects, onAdd, onClose }) {
             onChange={e => setDescription(e.target.value)}
             placeholder="What were you working on?"
             className={inputClass}
+            style={inputStyle}
+            onFocus={e => e.currentTarget.style.boxShadow = '0 0 0 3px rgba(241,201,59,0.30)'}
+            onBlur={e => e.currentTarget.style.boxShadow = ''}
           />
 
           <div className="relative">
             <button
               type="button"
               onClick={() => setShowProjectPicker(v => !v)}
-              className={`w-full flex items-center gap-2 px-4 py-3 rounded-xl border text-sm transition-[border-color,background-color] duration-150 ${
-                activeProject
-                  ? 'border-transparent text-white'
-                  : 'border-gray-200 text-[#6B7280] hover:border-gray-300'
-              }`}
-              style={activeProject ? { backgroundColor: activeProject.color } : {}}
+              className="w-full flex items-center gap-2 px-4 py-3 rounded-xl text-sm transition-[border-color,background-color] duration-150"
+              style={activeProject
+                ? { backgroundColor: activeProject.color, border: '1px solid transparent', color: '#fff' }
+                : { ...inputStyle, color: '#7c776f' }
+              }
             >
               <span
                 className="w-2 h-2 rounded-full"
-                style={{ backgroundColor: activeProject ? 'rgba(255,255,255,0.7)' : '#d1d5db' }}
+                style={{ backgroundColor: activeProject ? 'rgba(255,255,255,0.7)' : '#c0b8ae' }}
               />
               {activeProject ? activeProject.name : 'No project'}
               <ChevronDown size={14} className="ml-auto" />
             </button>
             {showProjectPicker && (
-              <div className="absolute top-full left-0 mt-1 bg-white border border-gray-100 rounded-2xl z-50 w-full py-1.5 overflow-hidden dropdown-content" style={{ boxShadow: '0 20px 40px rgba(15,23,42,0.12)' }}>
+              <div
+                className="absolute top-full left-0 mt-1 rounded-2xl z-50 w-full py-1.5 overflow-hidden dropdown-content"
+                style={{
+                  backgroundColor: '#faf8f4',
+                  border: '1px solid rgba(43,42,39,0.08)',
+                  boxShadow: '0 20px 40px rgba(55,44,22,0.10)',
+                }}
+              >
                 <button
                   type="button"
                   onClick={() => { setProjectId(null); setShowProjectPicker(false) }}
-                  className="w-full text-left px-4 py-2 text-sm text-[#6B7280] hover:bg-gray-50 flex items-center gap-2 transition-colors duration-100"
+                  className="w-full text-left px-4 py-2 text-sm flex items-center gap-2 transition-colors duration-100"
+                  style={{ color: '#7c776f' }}
+                  onMouseEnter={e => e.currentTarget.style.backgroundColor = '#f1ede6'}
+                  onMouseLeave={e => e.currentTarget.style.backgroundColor = ''}
                 >
-                  <span className="w-2 h-2 rounded-full bg-gray-300" />
+                  <span className="w-2 h-2 rounded-full" style={{ backgroundColor: '#c0b8ae' }} />
                   No project
                 </button>
                 {projects.map(p => (
@@ -94,12 +123,15 @@ export default function ManualEntryModal({ projects, onAdd, onClose }) {
                     type="button"
                     key={p.id}
                     onClick={() => { setProjectId(p.id); setShowProjectPicker(false) }}
-                    className="w-full text-left px-4 py-2 text-sm text-[#111827] hover:bg-gray-50 flex items-center gap-2 transition-colors duration-100"
+                    className="w-full text-left px-4 py-2 text-sm flex items-center gap-2 transition-colors duration-100"
+                    style={{ color: '#2b2a27' }}
+                    onMouseEnter={e => e.currentTarget.style.backgroundColor = '#f1ede6'}
+                    onMouseLeave={e => e.currentTarget.style.backgroundColor = ''}
                   >
                     <span className="w-2 h-2 rounded-full" style={{ backgroundColor: p.color }} />
                     {p.name}
                     {p.hourlyRate > 0 && (
-                      <span className="ml-auto text-xs text-[#6B7280]">{p.hourlyRate}/u</span>
+                      <span className="ml-auto text-xs" style={{ color: '#7c776f' }}>{p.hourlyRate}/u</span>
                     )}
                   </button>
                 ))}
@@ -109,16 +141,19 @@ export default function ManualEntryModal({ projects, onAdd, onClose }) {
 
           <div className="grid grid-cols-3 gap-3">
             <div className="col-span-1">
-              <label className="block text-xs font-medium text-[#6B7280] mb-1.5">Date</label>
+              <label className="block text-xs font-medium mb-1.5" style={{ color: '#7c776f' }}>Date</label>
               <input
                 type="date"
                 value={date}
                 onChange={e => setDate(e.target.value)}
                 className={inputClass}
+                style={inputStyle}
+                onFocus={e => e.currentTarget.style.boxShadow = '0 0 0 3px rgba(241,201,59,0.30)'}
+                onBlur={e => e.currentTarget.style.boxShadow = ''}
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-[#6B7280] mb-1.5">Start</label>
+              <label className="block text-xs font-medium mb-1.5" style={{ color: '#7c776f' }}>Start</label>
               <input
                 type="text"
                 inputMode="numeric"
@@ -128,12 +163,15 @@ export default function ManualEntryModal({ projects, onAdd, onClose }) {
                 onBlur={e => {
                   const m = e.target.value.replace(/[^0-9]/g, '')
                   if (m.length === 4) setStartTime(`${m.slice(0,2)}:${m.slice(2)}`)
+                  e.currentTarget.style.boxShadow = ''
                 }}
                 className={inputClass}
+                style={inputStyle}
+                onFocus={e => e.currentTarget.style.boxShadow = '0 0 0 3px rgba(241,201,59,0.30)'}
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-[#6B7280] mb-1.5">End</label>
+              <label className="block text-xs font-medium mb-1.5" style={{ color: '#7c776f' }}>End</label>
               <input
                 type="text"
                 inputMode="numeric"
@@ -143,25 +181,34 @@ export default function ManualEntryModal({ projects, onAdd, onClose }) {
                 onBlur={e => {
                   const m = e.target.value.replace(/[^0-9]/g, '')
                   if (m.length === 4) setEndTime(`${m.slice(0,2)}:${m.slice(2)}`)
+                  e.currentTarget.style.boxShadow = ''
                 }}
                 className={inputClass}
+                style={inputStyle}
+                onFocus={e => e.currentTarget.style.boxShadow = '0 0 0 3px rgba(241,201,59,0.30)'}
               />
             </div>
           </div>
 
-          {error && <p className="text-[#EF4444] text-sm">{error}</p>}
+          {error && <p className="text-sm" style={{ color: '#EF4444' }}>{error}</p>}
 
           <div className="flex gap-3 pt-2">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2.5 rounded-full border border-gray-200 text-sm font-medium text-[#6B7280] hover:bg-gray-50 transition-[transform,background-color] duration-150 active:scale-[0.97]"
+              className="flex-1 py-2.5 rounded-full text-sm font-medium transition-[transform,background-color] duration-150 active:scale-[0.97]"
+              style={{ border: '1px solid rgba(43,42,39,0.12)', color: '#7c776f' }}
+              onMouseEnter={e => e.currentTarget.style.backgroundColor = '#e6e0d7'}
+              onMouseLeave={e => e.currentTarget.style.backgroundColor = ''}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 py-2.5 rounded-full bg-[#6B5CF6] hover:bg-[#5347d4] text-white text-sm font-medium transition-[transform,background-color] duration-150 active:scale-[0.97]"
+              className="flex-1 py-2.5 rounded-full text-sm font-medium text-white transition-[transform,background-color] duration-150 active:scale-[0.97]"
+              style={{ backgroundColor: '#20242c' }}
+              onMouseEnter={e => e.currentTarget.style.backgroundColor = '#2d3340'}
+              onMouseLeave={e => e.currentTarget.style.backgroundColor = '#20242c'}
             >
               Add entry
             </button>

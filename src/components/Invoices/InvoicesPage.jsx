@@ -311,10 +311,13 @@ export default function InvoicesPage({
   return (
     <div className="flex-1 p-8 max-w-5xl mx-auto w-full">
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-bold text-[#111827]">Facturatie</h1>
+        <h1 className="text-2xl font-bold" style={{ color: '#2b2a27' }}>Facturatie</h1>
         <button
           onClick={() => setShowSettings(true)}
-          className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 text-sm text-[#6B7280] hover:bg-gray-50 hover:text-[#111827] transition-[transform,background-color,color] duration-150 active:scale-[0.97]"
+          className="flex items-center gap-2 px-4 py-2 rounded-full text-sm transition-[transform,background-color,color] duration-150 active:scale-[0.97]"
+          style={{ border: '1px solid rgba(43,42,39,0.12)', color: '#7c776f' }}
+          onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#e6e0d7'; e.currentTarget.style.color = '#2b2a27' }}
+          onMouseLeave={e => { e.currentTarget.style.backgroundColor = ''; e.currentTarget.style.color = '#7c776f' }}
         >
           <Settings size={16} />
           <span className="hidden sm:inline">Mijn gegevens</span>
@@ -322,7 +325,10 @@ export default function InvoicesPage({
       </div>
 
       {clientError && (
-        <div className="mb-4 flex items-center gap-3 px-4 py-3 bg-amber-50 border border-amber-200 rounded-2xl text-sm text-amber-800">
+        <div
+          className="mb-4 flex items-center gap-3 px-4 py-3 rounded-2xl text-sm"
+          style={{ backgroundColor: '#fef9ec', border: '1px solid rgba(241,201,59,0.3)', color: '#4a3c1a' }}
+        >
           <AlertCircle size={16} className="shrink-0" />
           <span className="flex-1">{clientError.message}</span>
           <button
@@ -331,31 +337,38 @@ export default function InvoicesPage({
           >
             Bewerk project
           </button>
-          <button onClick={() => setClientError(null)} className="ml-1 text-amber-500 hover:text-amber-700">
+          <button onClick={() => setClientError(null)} className="ml-1" style={{ color: '#7c776f' }}>
             <X size={14} />
           </button>
         </div>
       )}
 
       {groups.length === 0 ? (
-        <div className="text-center py-24 text-[#6B7280]">
+        <div className="text-center py-24" style={{ color: '#7c776f' }}>
           <FileText size={44} className="mx-auto mb-4 opacity-20" />
           <p className="text-sm font-medium">Geen factureerbare uren gevonden</p>
-          <p className="text-xs mt-1 text-gray-400">
+          <p className="text-xs mt-1" style={{ color: '#c0b8ae' }}>
             Voeg een uurtarief toe aan een project en registreer uren om hier facturen te genereren.
           </p>
         </div>
       ) : (
-        <div className="bg-white rounded-2xl overflow-hidden" style={{ boxShadow: '0 20px 40px rgba(15,23,42,0.06)', border: '1px solid rgba(15,23,42,0.05)' }}>
+        <div
+          className="rounded-2xl overflow-hidden"
+          style={{
+            backgroundColor: '#f6f3ee',
+            boxShadow: '0 20px 40px rgba(55,44,22,0.06)',
+            border: '1px solid rgba(43,42,39,0.06)',
+          }}
+        >
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-100 text-left">
-                <th className="px-5 py-3.5 text-xs font-medium text-[#6B7280]">Maand</th>
-                <th className="px-5 py-3.5 text-xs font-medium text-[#6B7280]">Project / klant</th>
-                <th className="px-5 py-3.5 text-xs font-medium text-[#6B7280] text-right">Uren</th>
-                <th className="px-5 py-3.5 text-xs font-medium text-[#6B7280] text-right">Bedrag</th>
-                <th className="px-5 py-3.5 text-xs font-medium text-[#6B7280]">Status</th>
-                <th className="px-5 py-3.5 text-xs font-medium text-[#6B7280]"></th>
+              <tr style={{ borderBottom: '1px solid rgba(43,42,39,0.07)' }}>
+                <th className="px-5 py-3.5 text-xs font-medium text-left" style={{ color: '#7c776f' }}>Maand</th>
+                <th className="px-5 py-3.5 text-xs font-medium text-left" style={{ color: '#7c776f' }}>Project / klant</th>
+                <th className="px-5 py-3.5 text-xs font-medium text-right" style={{ color: '#7c776f' }}>Uren</th>
+                <th className="px-5 py-3.5 text-xs font-medium text-right" style={{ color: '#7c776f' }}>Bedrag</th>
+                <th className="px-5 py-3.5 text-xs font-medium text-left" style={{ color: '#7c776f' }}>Status</th>
+                <th className="px-5 py-3.5 text-xs font-medium text-left" style={{ color: '#7c776f' }}></th>
               </tr>
             </thead>
             <tbody>
@@ -377,12 +390,12 @@ export default function InvoicesPage({
                 return (
                   <tr
                     key={group.key}
-                    className="border-b border-gray-50 last:border-0 transition-colors duration-100"
-                    style={{ backgroundColor: undefined }}
-                    onMouseEnter={e => e.currentTarget.style.backgroundColor = 'rgba(107,92,246,0.02)'}
+                    className="transition-colors duration-100"
+                    style={{ borderBottom: '1px solid rgba(43,42,39,0.05)' }}
+                    onMouseEnter={e => e.currentTarget.style.backgroundColor = 'rgba(43,42,39,0.025)'}
                     onMouseLeave={e => e.currentTarget.style.backgroundColor = ''}
                   >
-                    <td className="px-5 py-4 font-medium text-[#111827] capitalize whitespace-nowrap">
+                    <td className="px-5 py-4 font-medium capitalize whitespace-nowrap" style={{ color: '#2b2a27' }}>
                       {formatMonthLabel(group.month)}
                     </td>
 
@@ -395,19 +408,19 @@ export default function InvoicesPage({
                           />
                         )}
                         <div>
-                          <div className="text-[#111827]">{project?.name || 'Geen project'}</div>
+                          <div style={{ color: '#2b2a27' }}>{project?.name || 'Geen project'}</div>
                           {project?.client && (
-                            <div className="text-xs text-[#6B7280] mt-0.5">{project.client}</div>
+                            <div className="text-xs mt-0.5" style={{ color: '#7c776f' }}>{project.client}</div>
                           )}
                         </div>
                       </div>
                     </td>
 
-                    <td className="px-5 py-4 text-right font-mono text-[#6B7280] whitespace-nowrap tabular-nums">
+                    <td className="px-5 py-4 text-right font-mono whitespace-nowrap tabular-nums" style={{ color: '#7c776f' }}>
                       {fmtBelgian(totalHours)} u
                     </td>
 
-                    <td className="px-5 py-4 text-right font-medium text-[#111827] whitespace-nowrap">
+                    <td className="px-5 py-4 text-right font-medium whitespace-nowrap" style={{ color: '#2b2a27' }}>
                       {fmtCurrency(totalAmount)}
                     </td>
 
@@ -415,16 +428,24 @@ export default function InvoicesPage({
                       <div>
                         <button
                           onClick={() => handleToggleStatus(group)}
-                          className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium transition-[transform,background-color] duration-150 active:scale-[0.95] ${
-                            isFactured
-                              ? 'bg-[#22C55E]/12 text-[#22C55E] hover:bg-[#22C55E]/20'
-                              : 'bg-gray-100 text-[#6B7280] hover:bg-gray-200'
-                          }`}
+                          className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium transition-[transform,background-color] duration-150 active:scale-[0.95]"
+                          style={isFactured
+                            ? { backgroundColor: 'rgba(34,197,94,0.1)', color: '#22C55E' }
+                            : { backgroundColor: '#e6e0d7', color: '#7c776f' }
+                          }
+                          onMouseEnter={e => {
+                            if (isFactured) e.currentTarget.style.backgroundColor = 'rgba(34,197,94,0.18)'
+                            else e.currentTarget.style.backgroundColor = '#ddd8ce'
+                          }}
+                          onMouseLeave={e => {
+                            if (isFactured) e.currentTarget.style.backgroundColor = 'rgba(34,197,94,0.1)'
+                            else e.currentTarget.style.backgroundColor = '#e6e0d7'
+                          }}
                         >
                           {isFactured ? 'Gefactureerd' : 'Niet gefactureerd'}
                         </button>
                         {record?.invoiceNumber && (
-                          <div className="text-xs text-[#6B7280] mt-1 font-mono pl-0.5">
+                          <div className="text-xs mt-1 font-mono pl-0.5" style={{ color: '#7c776f' }}>
                             {record.invoiceNumber}
                           </div>
                         )}
@@ -435,11 +456,13 @@ export default function InvoicesPage({
                       <button
                         onClick={() => handleGeneratePDF(group)}
                         title={btnTitle}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-[transform,background-color] duration-150 active:scale-[0.95] whitespace-nowrap ${
-                          canGenerate
-                            ? 'bg-[#6B5CF6] text-white hover:bg-[#5347d4]'
-                            : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                        }`}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-[transform,background-color] duration-150 active:scale-[0.95] whitespace-nowrap"
+                        style={canGenerate
+                          ? { backgroundColor: '#20242c', color: '#f6f2eb' }
+                          : { backgroundColor: '#e6e0d7', color: '#c0b8ae', cursor: 'not-allowed' }
+                        }
+                        onMouseEnter={e => { if (canGenerate) e.currentTarget.style.backgroundColor = '#2d3340' }}
+                        onMouseLeave={e => { if (canGenerate) e.currentTarget.style.backgroundColor = '#20242c' }}
                       >
                         <FileText size={13} />
                         PDF
