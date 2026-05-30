@@ -43,12 +43,14 @@ export default function EditEntryModal({ entry, projects, onSave, onClose }) {
 
   const activeProject = projects.find(p => p.id === projectId)
 
+  const inputClass = 'w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-[#6B5CF6] focus:ring-2 focus:ring-[#6B5CF6]/15 transition-[border-color,box-shadow] duration-150'
+
   return (
-    <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md">
+    <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4 modal-backdrop">
+      <div className="bg-white rounded-2xl w-full max-w-md modal-content" style={{ boxShadow: '0 32px 64px rgba(15,23,42,0.18)' }}>
         <div className="flex items-center justify-between p-6 border-b border-gray-100">
-          <h2 className="text-lg font-semibold text-gray-900">Edit entry</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+          <h2 className="text-lg font-semibold text-[#111827]">Edit entry</h2>
+          <button onClick={onClose} className="text-[#6B7280] hover:text-[#111827] transition-colors duration-150 rounded-lg p-1 hover:bg-gray-100">
             <X size={20} />
           </button>
         </div>
@@ -59,17 +61,17 @@ export default function EditEntryModal({ entry, projects, onSave, onClose }) {
             value={description}
             onChange={e => setDescription(e.target.value)}
             placeholder="What were you working on?"
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-[#c95da7] transition-colors"
+            className={inputClass}
           />
 
           <div className="relative">
             <button
               type="button"
               onClick={() => setShowProjectPicker(v => !v)}
-              className={`w-full flex items-center gap-2 px-4 py-3 rounded-xl border text-sm transition-colors ${
+              className={`w-full flex items-center gap-2 px-4 py-3 rounded-xl border text-sm transition-[border-color,background-color] duration-150 ${
                 activeProject
                   ? 'border-transparent text-white'
-                  : 'border-gray-200 text-gray-500 hover:border-gray-300'
+                  : 'border-gray-200 text-[#6B7280] hover:border-gray-300'
               }`}
               style={activeProject ? { backgroundColor: activeProject.color } : {}}
             >
@@ -81,11 +83,11 @@ export default function EditEntryModal({ entry, projects, onSave, onClose }) {
               <ChevronDown size={14} className="ml-auto" />
             </button>
             {showProjectPicker && (
-              <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-xl shadow-lg z-50 w-full py-1">
+              <div className="absolute top-full left-0 mt-1 bg-white border border-gray-100 rounded-2xl z-50 w-full py-1.5 overflow-hidden" style={{ boxShadow: '0 20px 40px rgba(15,23,42,0.12)' }}>
                 <button
                   type="button"
                   onClick={() => { setProjectId(null); setShowProjectPicker(false) }}
-                  className="w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 flex items-center gap-2"
+                  className="w-full text-left px-4 py-2 text-sm text-[#6B7280] hover:bg-gray-50 flex items-center gap-2 transition-colors duration-100"
                 >
                   <span className="w-2 h-2 rounded-full bg-gray-300" />
                   No project
@@ -95,12 +97,12 @@ export default function EditEntryModal({ entry, projects, onSave, onClose }) {
                     type="button"
                     key={p.id}
                     onClick={() => { setProjectId(p.id); setShowProjectPicker(false) }}
-                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                    className="w-full text-left px-4 py-2 text-sm text-[#111827] hover:bg-gray-50 flex items-center gap-2 transition-colors duration-100"
                   >
                     <span className="w-2 h-2 rounded-full" style={{ backgroundColor: p.color }} />
                     {p.name}
                     {p.hourlyRate > 0 && (
-                      <span className="ml-auto text-xs text-gray-400">{p.hourlyRate}/u</span>
+                      <span className="ml-auto text-xs text-[#6B7280]">{p.hourlyRate}/u</span>
                     )}
                   </button>
                 ))}
@@ -110,16 +112,16 @@ export default function EditEntryModal({ entry, projects, onSave, onClose }) {
 
           <div className="grid grid-cols-3 gap-3">
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1.5">Date</label>
+              <label className="block text-xs font-medium text-[#6B7280] mb-1.5">Date</label>
               <input
                 type="date"
                 value={date}
                 onChange={e => setDate(e.target.value)}
-                className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-[#c95da7] transition-colors"
+                className={inputClass}
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1.5">Start</label>
+              <label className="block text-xs font-medium text-[#6B7280] mb-1.5">Start</label>
               <input
                 type="text"
                 inputMode="numeric"
@@ -130,11 +132,11 @@ export default function EditEntryModal({ entry, projects, onSave, onClose }) {
                   const m = e.target.value.replace(/[^0-9]/g, '')
                   if (m.length === 4) setStartTime(`${m.slice(0,2)}:${m.slice(2)}`)
                 }}
-                className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-[#c95da7] transition-colors"
+                className={inputClass}
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1.5">End</label>
+              <label className="block text-xs font-medium text-[#6B7280] mb-1.5">End</label>
               <input
                 type="text"
                 inputMode="numeric"
@@ -145,24 +147,24 @@ export default function EditEntryModal({ entry, projects, onSave, onClose }) {
                   const m = e.target.value.replace(/[^0-9]/g, '')
                   if (m.length === 4) setEndTime(`${m.slice(0,2)}:${m.slice(2)}`)
                 }}
-                className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-[#c95da7] transition-colors"
+                className={inputClass}
               />
             </div>
           </div>
 
-          {error && <p className="text-red-500 text-sm">{error}</p>}
+          {error && <p className="text-[#EF4444] text-sm">{error}</p>}
 
           <div className="flex gap-3 pt-2">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+              className="flex-1 py-2.5 rounded-full border border-gray-200 text-sm font-medium text-[#6B7280] hover:bg-gray-50 transition-[transform,background-color] duration-150 active:scale-[0.97]"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 py-2.5 rounded-xl bg-[#c95da7] hover:bg-[#a04389] text-white text-sm font-medium transition-colors"
+              className="flex-1 py-2.5 rounded-full bg-[#6B5CF6] hover:bg-[#5347d4] text-white text-sm font-medium transition-[transform,background-color] duration-150 active:scale-[0.97]"
             >
               Save
             </button>

@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { X } from 'lucide-react'
 
 const PRESET_COLORS = [
-  '#c95da7', '#e57cd8', '#4a9eff', '#34d399', '#f97316',
-  '#ef4444', '#a78bfa', '#fbbf24', '#06b6d4', '#84cc16',
+  '#6B5CF6', '#A855F7', '#4a9eff', '#34d399', '#f97316',
+  '#EF4444', '#a78bfa', '#fbbf24', '#06b6d4', '#84cc16',
 ]
 
 export default function ProjectModal({ project, currency, onSave, onClose }) {
@@ -55,40 +55,42 @@ export default function ProjectModal({ project, currency, onSave, onClose }) {
     onClose()
   }
 
+  const inputClass = 'w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-[#6B5CF6] focus:ring-2 focus:ring-[#6B5CF6]/15 transition-[border-color,box-shadow] duration-150'
+
   return (
-    <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4 modal-backdrop">
+      <div className="bg-white rounded-2xl w-full max-w-md max-h-[90vh] overflow-y-auto modal-content" style={{ boxShadow: '0 32px 64px rgba(15,23,42,0.18)' }}>
         <div className="flex items-center justify-between p-6 border-b border-gray-100">
-          <h2 className="text-lg font-semibold text-gray-900">
+          <h2 className="text-lg font-semibold text-[#111827]">
             {project ? 'Edit project' : 'New project'}
           </h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+          <button onClick={onClose} className="text-[#6B7280] hover:text-[#111827] transition-colors duration-150 rounded-lg p-1 hover:bg-gray-100">
             <X size={20} />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1.5">Project name</label>
+            <label className="block text-xs font-medium text-[#6B7280] mb-1.5">Project name</label>
             <input
               type="text"
               value={name}
               onChange={e => setName(e.target.value)}
               placeholder="e.g. Design"
               autoFocus
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-[#c95da7] transition-colors"
+              className={inputClass}
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-2">Color</label>
+            <label className="block text-xs font-medium text-[#6B7280] mb-2">Color</label>
             <div className="flex gap-2 flex-wrap">
               {PRESET_COLORS.map(c => (
                 <button
                   key={c}
                   type="button"
                   onClick={() => setColor(c)}
-                  className={`w-7 h-7 rounded-full transition-transform ${color === c ? 'scale-125 ring-2 ring-offset-2 ring-gray-400' : 'hover:scale-110'}`}
+                  className={`w-7 h-7 rounded-full transition-transform duration-150 ${color === c ? 'scale-125 ring-2 ring-offset-2 ring-gray-400' : 'hover:scale-110'}`}
                   style={{ backgroundColor: c }}
                 />
               ))}
@@ -96,7 +98,7 @@ export default function ProjectModal({ project, currency, onSave, onClose }) {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1.5">
+            <label className="block text-xs font-medium text-[#6B7280] mb-1.5">
               Klant *
             </label>
             <input
@@ -104,13 +106,13 @@ export default function ProjectModal({ project, currency, onSave, onClose }) {
               value={client}
               onChange={e => { setClient(e.target.value); setClientErrors(ce => ({ ...ce, client: undefined })) }}
               placeholder="e.g. Acme Corp"
-              className={`w-full px-4 py-3 rounded-xl border text-sm outline-none focus:border-[#c95da7] transition-colors ${clientErrors.client ? 'border-red-400' : 'border-gray-200'}`}
+              className={`${inputClass} ${clientErrors.client ? '!border-[#EF4444]' : ''}`}
             />
-            {clientErrors.client && <p className="text-red-500 text-xs mt-1">{clientErrors.client}</p>}
+            {clientErrors.client && <p className="text-[#EF4444] text-xs mt-1">{clientErrors.client}</p>}
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1.5">
+            <label className="block text-xs font-medium text-[#6B7280] mb-1.5">
               Adres klant *
             </label>
             <textarea
@@ -118,28 +120,28 @@ export default function ProjectModal({ project, currency, onSave, onClose }) {
               value={clientAddress}
               onChange={e => { setClientAddress(e.target.value); setClientErrors(ce => ({ ...ce, clientAddress: undefined })) }}
               placeholder={"Straat 1\n1000 Brussel"}
-              className={`w-full px-4 py-3 rounded-xl border text-sm outline-none focus:border-[#c95da7] transition-colors resize-none ${clientErrors.clientAddress ? 'border-red-400' : 'border-gray-200'}`}
+              className={`${inputClass} resize-none ${clientErrors.clientAddress ? '!border-[#EF4444]' : ''}`}
             />
-            {clientErrors.clientAddress && <p className="text-red-500 text-xs mt-1">{clientErrors.clientAddress}</p>}
+            {clientErrors.clientAddress && <p className="text-[#EF4444] text-xs mt-1">{clientErrors.clientAddress}</p>}
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1.5">BTW-nummer klant (optioneel)</label>
+            <label className="block text-xs font-medium text-[#6B7280] mb-1.5">BTW-nummer klant (optioneel)</label>
             <input
               type="text"
               value={clientVAT}
               onChange={e => setClientVAT(e.target.value)}
               placeholder="BE 0123.456.789"
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-[#c95da7] transition-colors"
+              className={inputClass}
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1.5">
+            <label className="block text-xs font-medium text-[#6B7280] mb-1.5">
               Hourly rate (optional)
             </label>
             <div className="flex items-center gap-0">
-              <span className="inline-flex items-center px-3.5 py-3 bg-gray-50 border border-r-0 border-gray-200 rounded-l-xl text-sm text-gray-500 font-medium">
+              <span className="inline-flex items-center px-3.5 py-3 bg-gray-50 border border-r-0 border-gray-200 rounded-l-xl text-sm text-[#6B7280] font-medium">
                 {currency}/u
               </span>
               <input
@@ -152,14 +154,14 @@ export default function ProjectModal({ project, currency, onSave, onClose }) {
                 placeholder="0"
                 min="0"
                 step="0.01"
-                className="flex-1 px-4 py-3 rounded-r-xl border border-gray-200 text-sm outline-none focus:border-[#c95da7] transition-colors"
+                className="flex-1 px-4 py-3 rounded-r-xl border border-gray-200 text-sm outline-none focus:border-[#6B5CF6] focus:ring-2 focus:ring-[#6B5CF6]/15 transition-[border-color,box-shadow] duration-150"
               />
             </div>
-            {rateError && <p className="text-red-500 text-xs mt-1">{rateError}</p>}
+            {rateError && <p className="text-[#EF4444] text-xs mt-1">{rateError}</p>}
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1.5">
+            <label className="block text-xs font-medium text-[#6B7280] mb-1.5">
               Max uren per maand (optioneel)
             </label>
             <input
@@ -169,7 +171,7 @@ export default function ProjectModal({ project, currency, onSave, onClose }) {
               placeholder="bv. 6 — laat leeg voor geen limiet"
               min="0"
               step="0.5"
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-[#c95da7] transition-colors"
+              className={inputClass}
             />
           </div>
 
@@ -177,13 +179,13 @@ export default function ProjectModal({ project, currency, onSave, onClose }) {
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+              className="flex-1 py-2.5 rounded-full border border-gray-200 text-sm font-medium text-[#6B7280] hover:bg-gray-50 transition-[transform,background-color] duration-150 active:scale-[0.97]"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 py-2.5 rounded-xl bg-[#c95da7] hover:bg-[#a04389] text-white text-sm font-medium transition-colors"
+              className="flex-1 py-2.5 rounded-full bg-[#6B5CF6] hover:bg-[#5347d4] text-white text-sm font-medium transition-[transform,background-color] duration-150 active:scale-[0.97]"
             >
               {project ? 'Save' : 'Create'}
             </button>

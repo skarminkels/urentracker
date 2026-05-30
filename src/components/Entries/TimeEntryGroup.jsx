@@ -6,16 +6,16 @@ export default function TimeEntryGroup({ group, projects, currency, onContinue, 
   const dayEarnings = group.entries.reduce((sum, e) => sum + calcEarnings(e, projects), 0)
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 mb-4 overflow-hidden">
-      <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100 bg-gray-50/60">
-        <span className="text-sm font-semibold text-gray-700">{group.label}</span>
+    <div className="bg-white rounded-2xl mb-4 overflow-hidden" style={{ boxShadow: '0 20px 40px rgba(15,23,42,0.06)', border: '1px solid rgba(15,23,42,0.05)' }}>
+      <div className="flex items-center justify-between px-5 py-3 border-b border-gray-50 bg-gray-50/40">
+        <span className="text-sm font-semibold text-[#111827]">{group.label}</span>
         <div className="flex items-center gap-3">
           {dayEarnings > 0 && (
-            <span className="text-sm font-medium text-[#c95da7]">
+            <span className="text-sm font-medium text-[#6B5CF6]">
               {formatCurrency(dayEarnings, currency)}
             </span>
           )}
-          <span className="text-sm font-medium text-gray-500 font-mono">
+          <span className="text-sm font-medium text-[#6B7280] font-mono tabular-nums">
             {formatDurationShort(group.total)}
           </span>
         </div>

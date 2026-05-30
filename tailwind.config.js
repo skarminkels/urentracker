@@ -7,15 +7,22 @@ export default {
   theme: {
     extend: {
       colors: {
-        toggl: {
-          purple: '#c95da7',
-          'purple-light': '#e57cd8',
-          'purple-dark': '#a04389',
-          'purple-bg': '#f9f0f6',
+        brand: {
+          primary:        '#6B5CF6',
+          'primary-dark': '#5347d4',
+          'primary-soft': '#F1EEFF',
+          sidebar:        '#151821',
+          success:        '#22C55E',
+          warning:        '#FACC15',
+          danger:         '#EF4444',
+          muted:          '#6B7280',
         }
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+      },
+      boxShadow: {
+        card: '0 20px 40px rgba(15, 23, 42, 0.08)',
       },
     },
   },

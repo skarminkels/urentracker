@@ -22,42 +22,42 @@ export default function InvoiceSettingsModal({ settings, onSave, onClose }) {
   }
 
   const inputClass =
-    'w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-[#c95da7] transition-colors'
+    'w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-[#6B5CF6] focus:ring-2 focus:ring-[#6B5CF6]/15 transition-[border-color,box-shadow] duration-150'
 
   return (
-    <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4 modal-backdrop">
+      <div className="bg-white rounded-2xl w-full max-w-md max-h-[90vh] overflow-y-auto modal-content" style={{ boxShadow: '0 32px 64px rgba(15,23,42,0.18)' }}>
         <div className="flex items-center justify-between p-6 border-b border-gray-100 sticky top-0 bg-white">
-          <h2 className="text-lg font-semibold text-gray-900">Mijn gegevens</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+          <h2 className="text-lg font-semibold text-[#111827]">Mijn gegevens</h2>
+          <button onClick={onClose} className="text-[#6B7280] hover:text-[#111827] transition-colors duration-150 rounded-lg p-1 hover:bg-gray-100">
             <X size={20} />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1.5">Volledige naam *</label>
+            <label className="block text-xs font-medium text-[#6B7280] mb-1.5">Volledige naam *</label>
             <input required value={form.naam} onChange={set('naam')} className={inputClass} />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1.5">Straat + nummer *</label>
+            <label className="block text-xs font-medium text-[#6B7280] mb-1.5">Straat + nummer *</label>
             <input required value={form.straat} onChange={set('straat')} className={inputClass} />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1.5">Postcode *</label>
+              <label className="block text-xs font-medium text-[#6B7280] mb-1.5">Postcode *</label>
               <input required value={form.postcode} onChange={set('postcode')} className={inputClass} />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1.5">Gemeente *</label>
+              <label className="block text-xs font-medium text-[#6B7280] mb-1.5">Gemeente *</label>
               <input required value={form.gemeente} onChange={set('gemeente')} className={inputClass} />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1.5">
+            <label className="block text-xs font-medium text-[#6B7280] mb-1.5">
               Ondernemingsnummer <span className="text-gray-400 font-normal">(optioneel)</span>
             </label>
             <input
@@ -69,7 +69,7 @@ export default function InvoiceSettingsModal({ settings, onSave, onClose }) {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1.5">IBAN *</label>
+            <label className="block text-xs font-medium text-[#6B7280] mb-1.5">IBAN *</label>
             <input
               required
               value={form.iban}
@@ -80,7 +80,7 @@ export default function InvoiceSettingsModal({ settings, onSave, onClose }) {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1.5">
+            <label className="block text-xs font-medium text-[#6B7280] mb-1.5">
               Betalingstermijn (dagen)
             </label>
             <input
@@ -97,13 +97,13 @@ export default function InvoiceSettingsModal({ settings, onSave, onClose }) {
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+              className="flex-1 py-2.5 rounded-full border border-gray-200 text-sm font-medium text-[#6B7280] hover:bg-gray-50 transition-[transform,background-color] duration-150 active:scale-[0.97]"
             >
               Annuleren
             </button>
             <button
               type="submit"
-              className="flex-1 py-2.5 rounded-xl bg-[#c95da7] hover:bg-[#a04389] text-white text-sm font-medium transition-colors"
+              className="flex-1 py-2.5 rounded-full bg-[#6B5CF6] hover:bg-[#5347d4] text-white text-sm font-medium transition-[transform,background-color] duration-150 active:scale-[0.97]"
             >
               Opslaan
             </button>

@@ -2,6 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Design tokens ──────────────────────────────────────────────────────────── */
+:root {
+  --color-bg:           #F5F5F7;
+  --color-bg-alt:       #FFFFFF;
+  --color-surface-dark: #151821;
+  --color-primary:      #6B5CF6;
+  --color-primary-dark: #5347d4;
+  --color-primary-soft: #F1EEFF;
+  --color-text-main:    #111827;
+  --color-text-muted:   #6B7280;
+  --color-success:      #22C55E;
+  --color-warning:      #FACC15;
+  --color-danger:       #EF4444;
+  --shadow-card:        0 20px 40px rgba(15, 23, 42, 0.08);
+  --ease-out:           cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out:        cubic-bezier(0.77, 0, 0.175, 1);
+}
+
 * {
   box-sizing: border-box;
 }
@@ -11,4 +29,39 @@ body {
   padding: 0;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
+  background: var(--color-bg);
+  color: var(--color-text-main);
+}
+
+/* ── Modal entrance ─────────────────────────────────────────────────────────── */
+@keyframes modal-backdrop-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes modal-content-in {
+  from { opacity: 0; transform: scale(0.95) translateY(4px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal-backdrop {
+  animation: modal-backdrop-in 150ms ease-out;
+}
+
+.modal-content {
+  animation: modal-content-in 220ms var(--ease-out);
+  transform-origin: center;
+}
+
+/* ── Reduced motion ─────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .modal-backdrop,
+  .modal-content {
+    animation: none;
+  }
+}
+
+/* ── Touch device: skip hover states ────────────────────────────────────────── */
+@media not all and (hover: hover) and (pointer: fine) {
+  .hover-scale:hover { transform: none; }
 }

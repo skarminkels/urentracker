@@ -311,10 +311,10 @@ export default function InvoicesPage({
   return (
     <div className="flex-1 p-8 max-w-5xl mx-auto w-full">
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Facturatie</h1>
+        <h1 className="text-2xl font-bold text-[#111827]">Facturatie</h1>
         <button
           onClick={() => setShowSettings(true)}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 text-sm text-[#6B7280] hover:bg-gray-50 hover:text-[#111827] transition-[transform,background-color,color] duration-150 active:scale-[0.97]"
         >
           <Settings size={16} />
           <span className="hidden sm:inline">Mijn gegevens</span>
@@ -322,7 +322,7 @@ export default function InvoicesPage({
       </div>
 
       {clientError && (
-        <div className="mb-4 flex items-center gap-3 px-4 py-3 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-800">
+        <div className="mb-4 flex items-center gap-3 px-4 py-3 bg-amber-50 border border-amber-200 rounded-2xl text-sm text-amber-800">
           <AlertCircle size={16} className="shrink-0" />
           <span className="flex-1">{clientError.message}</span>
           <button
@@ -338,24 +338,24 @@ export default function InvoicesPage({
       )}
 
       {groups.length === 0 ? (
-        <div className="text-center py-24 text-gray-400">
-          <FileText size={44} className="mx-auto mb-4 opacity-25" />
+        <div className="text-center py-24 text-[#6B7280]">
+          <FileText size={44} className="mx-auto mb-4 opacity-20" />
           <p className="text-sm font-medium">Geen factureerbare uren gevonden</p>
-          <p className="text-xs mt-1 text-gray-300">
+          <p className="text-xs mt-1 text-gray-400">
             Voeg een uurtarief toe aan een project en registreer uren om hier facturen te genereren.
           </p>
         </div>
       ) : (
-        <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+        <div className="bg-white rounded-2xl overflow-hidden" style={{ boxShadow: '0 20px 40px rgba(15,23,42,0.06)', border: '1px solid rgba(15,23,42,0.05)' }}>
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-100 text-left">
-                <th className="px-5 py-3.5 text-xs font-medium text-gray-500">Maand</th>
-                <th className="px-5 py-3.5 text-xs font-medium text-gray-500">Project / klant</th>
-                <th className="px-5 py-3.5 text-xs font-medium text-gray-500 text-right">Uren</th>
-                <th className="px-5 py-3.5 text-xs font-medium text-gray-500 text-right">Bedrag</th>
-                <th className="px-5 py-3.5 text-xs font-medium text-gray-500">Status</th>
-                <th className="px-5 py-3.5 text-xs font-medium text-gray-500"></th>
+                <th className="px-5 py-3.5 text-xs font-medium text-[#6B7280]">Maand</th>
+                <th className="px-5 py-3.5 text-xs font-medium text-[#6B7280]">Project / klant</th>
+                <th className="px-5 py-3.5 text-xs font-medium text-[#6B7280] text-right">Uren</th>
+                <th className="px-5 py-3.5 text-xs font-medium text-[#6B7280] text-right">Bedrag</th>
+                <th className="px-5 py-3.5 text-xs font-medium text-[#6B7280]">Status</th>
+                <th className="px-5 py-3.5 text-xs font-medium text-[#6B7280]"></th>
               </tr>
             </thead>
             <tbody>
@@ -377,9 +377,12 @@ export default function InvoicesPage({
                 return (
                   <tr
                     key={group.key}
-                    className="border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-colors"
+                    className="border-b border-gray-50 last:border-0 transition-colors duration-100"
+                    style={{ backgroundColor: undefined }}
+                    onMouseEnter={e => e.currentTarget.style.backgroundColor = 'rgba(107,92,246,0.02)'}
+                    onMouseLeave={e => e.currentTarget.style.backgroundColor = ''}
                   >
-                    <td className="px-5 py-4 font-medium text-gray-800 capitalize whitespace-nowrap">
+                    <td className="px-5 py-4 font-medium text-[#111827] capitalize whitespace-nowrap">
                       {formatMonthLabel(group.month)}
                     </td>
 
@@ -392,19 +395,19 @@ export default function InvoicesPage({
                           />
                         )}
                         <div>
-                          <div className="text-gray-800">{project?.name || 'Geen project'}</div>
+                          <div className="text-[#111827]">{project?.name || 'Geen project'}</div>
                           {project?.client && (
-                            <div className="text-xs text-gray-400 mt-0.5">{project.client}</div>
+                            <div className="text-xs text-[#6B7280] mt-0.5">{project.client}</div>
                           )}
                         </div>
                       </div>
                     </td>
 
-                    <td className="px-5 py-4 text-right font-mono text-gray-700 whitespace-nowrap">
+                    <td className="px-5 py-4 text-right font-mono text-[#6B7280] whitespace-nowrap tabular-nums">
                       {fmtBelgian(totalHours)} u
                     </td>
 
-                    <td className="px-5 py-4 text-right font-medium text-gray-800 whitespace-nowrap">
+                    <td className="px-5 py-4 text-right font-medium text-[#111827] whitespace-nowrap">
                       {fmtCurrency(totalAmount)}
                     </td>
 
@@ -412,16 +415,16 @@ export default function InvoicesPage({
                       <div>
                         <button
                           onClick={() => handleToggleStatus(group)}
-                          className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                          className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium transition-[transform,background-color] duration-150 active:scale-[0.95] ${
                             isFactured
-                              ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
-                              : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                              ? 'bg-[#22C55E]/12 text-[#22C55E] hover:bg-[#22C55E]/20'
+                              : 'bg-gray-100 text-[#6B7280] hover:bg-gray-200'
                           }`}
                         >
                           {isFactured ? 'Gefactureerd' : 'Niet gefactureerd'}
                         </button>
                         {record?.invoiceNumber && (
-                          <div className="text-xs text-gray-400 mt-1 font-mono pl-0.5">
+                          <div className="text-xs text-[#6B7280] mt-1 font-mono pl-0.5">
                             {record.invoiceNumber}
                           </div>
                         )}
@@ -432,9 +435,9 @@ export default function InvoicesPage({
                       <button
                         onClick={() => handleGeneratePDF(group)}
                         title={btnTitle}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors whitespace-nowrap ${
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-[transform,background-color] duration-150 active:scale-[0.95] whitespace-nowrap ${
                           canGenerate
-                            ? 'bg-[#c95da7] text-white hover:bg-[#a04389]'
+                            ? 'bg-[#6B5CF6] text-white hover:bg-[#5347d4]'
                             : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                         }`}
                       >

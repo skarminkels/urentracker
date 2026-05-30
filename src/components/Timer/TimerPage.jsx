@@ -34,10 +34,10 @@ export default function TimerPage({
 
       <div className="flex-1 px-6 py-6 max-w-4xl w-full mx-auto">
         <div className="flex items-center justify-between mb-5">
-          <h1 className="text-lg font-semibold text-gray-800">Time entries</h1>
+          <h1 className="text-lg font-semibold text-[#111827]">Time entries</h1>
           <button
             onClick={() => setShowManual(true)}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-[#c95da7] border border-[#c95da7]/30 hover:bg-[#c95da7]/5 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium text-[#6B5CF6] border border-[#6B5CF6]/30 hover:bg-[#6B5CF6]/5 transition-[transform,background-color,border-color] duration-150 active:scale-[0.97]"
           >
             <Plus size={16} />
             Manual entry
@@ -45,7 +45,7 @@ export default function TimerPage({
         </div>
 
         {groups.length === 0 ? (
-          <div className="text-center py-20 text-gray-400">
+          <div className="text-center py-20 text-[#6B7280]">
             <p className="text-lg font-medium mb-2">No time entries yet</p>
             <p className="text-sm">Start the timer or add a manual entry to get started.</p>
           </div>
