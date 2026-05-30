@@ -82,7 +82,7 @@ export default function ProjectsPage({
             return (
               <div
                 key={project.id}
-                className="bg-white rounded-2xl px-5 py-4 flex items-center gap-4 group transition-shadow duration-200 hover:shadow-md"
+                className="bg-white rounded-2xl px-5 py-4 flex items-center gap-4 group card-lift"
                 style={{ boxShadow: '0 20px 40px rgba(15,23,42,0.06)', border: '1px solid rgba(15,23,42,0.05)' }}
               >
                 <div

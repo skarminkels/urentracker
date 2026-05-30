@@ -80,7 +80,7 @@ export default function ManualEntryModal({ projects, onAdd, onClose }) {
               <ChevronDown size={14} className="ml-auto" />
             </button>
             {showProjectPicker && (
-              <div className="absolute top-full left-0 mt-1 bg-white border border-gray-100 rounded-2xl z-50 w-full py-1.5 overflow-hidden" style={{ boxShadow: '0 20px 40px rgba(15,23,42,0.12)' }}>
+              <div className="absolute top-full left-0 mt-1 bg-white border border-gray-100 rounded-2xl z-50 w-full py-1.5 overflow-hidden dropdown-content" style={{ boxShadow: '0 20px 40px rgba(15,23,42,0.12)' }}>
                 <button
                   type="button"
                   onClick={() => { setProjectId(null); setShowProjectPicker(false) }}

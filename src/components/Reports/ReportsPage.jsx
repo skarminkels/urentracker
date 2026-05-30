@@ -74,7 +74,7 @@ function TimeBarChart({ days, data, maxMs }) {
               <span className="text-xs text-[#6B7280]">{formatHours(ms)}</span>
               <div className="w-full flex flex-col justify-end" style={{ height: '80px' }}>
                 <div
-                  className="w-full rounded-t-lg transition-all duration-300"
+                  className="w-full rounded-t-lg transition-[height,background-color] duration-300 ease-out"
                   style={{
                     height: `${Math.max(pct, ms > 0 ? 4 : 0)}%`,
                     backgroundColor: '#6B5CF6',
@@ -160,7 +160,7 @@ function EarningsMonthChart({ months, data, maxEarnings, currency }) {
               )}
               <div className="w-full flex flex-col justify-end" style={{ height: '80px' }}>
                 <div
-                  className="w-full rounded-t-lg transition-all duration-300"
+                  className="w-full rounded-t-lg transition-[height] duration-300 ease-out"
                   style={{
                     height: `${Math.max(pct, amount > 0 ? 5 : 0)}%`,
                     background: amount > 0 ? 'linear-gradient(180deg, #6B5CF6 0%, #A855F7 100%)' : '#F5F5F7',
@@ -208,7 +208,7 @@ function EarningsProjectChart({ slices, currency }) {
               </div>
               <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
                 <div
-                  className="h-full rounded-full transition-all duration-300"
+                  className="h-full rounded-full transition-[width] duration-300 ease-out"
                   style={{ width: `${pct}%`, backgroundColor: s.color }}
                 />
               </div>
@@ -281,7 +281,7 @@ function HourCapSection({ projects, entries }) {
               {max > 0 && (
                 <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
                   <div
-                    className="h-full rounded-full transition-all duration-300"
+                    className="h-full rounded-full transition-[width,background-color] duration-300 ease-out"
                     style={{ width: `${Math.min(pct, 100)}%`, backgroundColor: barColor }}
                   />
                 </div>

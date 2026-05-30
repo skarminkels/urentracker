@@ -72,7 +72,7 @@ export default function TimerBar({ runningTimer, elapsed, projects, currency, st
           </button>
 
           {showProjectPicker && (
-            <div className="absolute top-full left-0 mt-1 bg-white border border-gray-100 rounded-2xl z-50 min-w-48 py-1.5 overflow-hidden" style={{ boxShadow: '0 20px 40px rgba(15,23,42,0.12)' }}>
+            <div className="absolute top-full left-0 mt-1 bg-white border border-gray-100 rounded-2xl z-50 min-w-48 py-1.5 overflow-hidden dropdown-content" style={{ boxShadow: '0 20px 40px rgba(15,23,42,0.12)' }}>
               <button
                 onClick={() => { setProjectId(null); setShowProjectPicker(false) }}
                 className="w-full text-left px-4 py-2 text-sm text-[#6B7280] hover:bg-gray-50 flex items-center gap-2 transition-colors duration-100"
