@@ -1,8 +1,10 @@
+import { useState } from 'react'
 import { formatDurationShort } from '../../utils/time'
 import { calcEarnings, formatCurrency } from '../../utils/currency'
 import TimeEntryRow from './TimeEntryRow'
 
 export default function TimeEntryGroup({ group, projects, currency, onContinue, onDelete, onUpdate }) {
+  const [hovered, setHovered] = useState(false)
   const dayEarnings = group.entries.reduce((sum, e) => sum + calcEarnings(e, projects), 0)
 
   return (
@@ -10,9 +12,15 @@ export default function TimeEntryGroup({ group, projects, currency, onContinue, 
       className="rounded-2xl mb-4 overflow-hidden"
       style={{
         backgroundColor: '#f6f3ee',
-        boxShadow: '0 20px 40px rgba(55,44,22,0.06)',
+        boxShadow: hovered
+          ? '0 28px 56px rgba(55,44,22,0.13)'
+          : '0 20px 40px rgba(55,44,22,0.06)',
         border: '1px solid rgba(43,42,39,0.06)',
+        transform: hovered ? 'translateY(-3px)' : 'translateY(0)',
+        transition: 'box-shadow 200ms ease, transform 200ms ease',
       }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
     >
       <div
         className="flex items-center justify-between px-5 py-3"
