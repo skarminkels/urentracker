@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import { Clock, TrendingUp } from 'lucide-react'
 import { getDayKey, getLast7Days, getLast12Months } from '../../utils/time'
 import { calcEarnings, formatCurrency } from '../../utils/currency'
@@ -33,29 +33,52 @@ function formatMonthYear(ts) {
   return new Date(ts).toLocaleDateString('nl-BE', { month: 'long', year: 'numeric' })
 }
 
-// ─── sub-components ────────────────────────────────────────────────────────────
+// ─── shared card ──────────────────────────────────────────────────────────────
 
-const cardStyle = {
+const cardBaseStyle = {
   backgroundColor: '#f6f3ee',
-  boxShadow: '0 20px 40px rgba(55,44,22,0.06)',
   border: '1px solid rgba(43,42,39,0.06)',
 }
 
+function HoverCard({ className, style, children }) {
+  const [hovered, setHovered] = useState(false)
+  return (
+    <div
+      className={className}
+      style={{
+        ...cardBaseStyle,
+        ...style,
+        boxShadow: hovered
+          ? '0 28px 56px rgba(55,44,22,0.13)'
+          : '0 20px 40px rgba(55,44,22,0.06)',
+        transform: hovered ? 'translateY(-3px)' : 'translateY(0)',
+        transition: 'box-shadow 200ms ease, transform 200ms ease',
+      }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      {children}
+    </div>
+  )
+}
+
+// ─── sub-components ────────────────────────────────────────────────────────────
+
 function EarningsCard({ label, amount, hours, subtitle, large, currency }) {
   return (
-    <div className="rounded-2xl p-5 flex flex-col gap-1" style={cardStyle}>
+    <HoverCard className="rounded-2xl p-5 flex flex-col gap-1">
       <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#7c776f' }}>{label}</p>
       <p className={`font-bold ${large ? 'text-3xl' : 'text-xl'}`} style={{ color: '#2b2a27' }}>
         {formatCurrency(amount, currency)}
       </p>
       <p className="text-xs" style={{ color: '#7c776f' }}>{formatHours(hours)} · {subtitle}</p>
-    </div>
+    </HoverCard>
   )
 }
 
 function StatCard({ icon: Icon, label, value, color }) {
   return (
-    <div className="rounded-2xl px-6 py-5 flex items-center gap-4" style={cardStyle}>
+    <HoverCard className="rounded-2xl px-6 py-5 flex items-center gap-4">
       <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: color + '18' }}>
         <Icon size={20} style={{ color }} />
       </div>
@@ -63,13 +86,13 @@ function StatCard({ icon: Icon, label, value, color }) {
         <p className="text-xs font-medium uppercase tracking-wide" style={{ color: '#7c776f' }}>{label}</p>
         <p className="text-2xl font-bold mt-0.5" style={{ color: '#2b2a27' }}>{value}</p>
       </div>
-    </div>
+    </HoverCard>
   )
 }
 
 function TimeBarChart({ days, data, maxMs }) {
   return (
-    <div className="rounded-2xl p-6" style={cardStyle}>
+    <HoverCard className="rounded-2xl p-6">
       <h2 className="text-sm font-semibold mb-6" style={{ color: '#2b2a27' }}>Last 7 days — time</h2>
       <div className="flex items-end gap-2 h-36">
         {days.map(day => {
@@ -94,16 +117,16 @@ function TimeBarChart({ days, data, maxMs }) {
           )
         })}
       </div>
-    </div>
+    </HoverCard>
   )
 }
 
 function PieChart({ slices }) {
   if (slices.length === 0) {
     return (
-      <div className="rounded-2xl p-6 flex items-center justify-center h-64" style={{ ...cardStyle, color: '#c0b8ae' }}>
+      <HoverCard className="rounded-2xl p-6 flex items-center justify-center h-64" style={{ color: '#c0b8ae' }}>
         No data
-      </div>
+      </HoverCard>
     )
   }
   const total = slices.reduce((s, x) => s + x.value, 0)
@@ -119,7 +142,7 @@ function PieChart({ slices }) {
     return { x: 50 + 40 * Math.cos(angle), y: 50 + 40 * Math.sin(angle) }
   }
   return (
-    <div className="rounded-2xl p-6" style={cardStyle}>
+    <HoverCard className="rounded-2xl p-6">
       <h2 className="text-sm font-semibold mb-6" style={{ color: '#2b2a27' }}>By project — time this week</h2>
       <div className="flex items-center gap-6">
         <svg viewBox="0 0 100 100" className="w-36 h-36 shrink-0">
@@ -145,13 +168,13 @@ function PieChart({ slices }) {
           ))}
         </div>
       </div>
-    </div>
+    </HoverCard>
   )
 }
 
 function EarningsMonthChart({ months, data, maxEarnings, currency }) {
   return (
-    <div className="rounded-2xl p-6" style={cardStyle}>
+    <HoverCard className="rounded-2xl p-6">
       <h2 className="text-sm font-semibold mb-6" style={{ color: '#2b2a27' }}>Earnings per month</h2>
       <div className="flex items-end gap-1.5 h-40">
         {months.map(month => {
@@ -179,22 +202,22 @@ function EarningsMonthChart({ months, data, maxEarnings, currency }) {
           )
         })}
       </div>
-    </div>
+    </HoverCard>
   )
 }
 
 function EarningsProjectChart({ slices, currency }) {
   if (slices.length === 0) {
     return (
-      <div className="rounded-2xl p-6 flex items-center justify-center min-h-48" style={{ ...cardStyle, color: '#c0b8ae' }}>
+      <HoverCard className="rounded-2xl p-6 flex items-center justify-center min-h-48" style={{ color: '#c0b8ae' }}>
         No billable entries this month
-      </div>
+      </HoverCard>
     )
   }
   const total = slices.reduce((s, x) => s + x.earnings, 0)
   const max = slices[0].earnings
   return (
-    <div className="rounded-2xl p-6" style={cardStyle}>
+    <HoverCard className="rounded-2xl p-6">
       <h2 className="text-sm font-semibold mb-5" style={{ color: '#2b2a27' }}>Earnings per project — this month</h2>
       <div className="space-y-3">
         {slices.map((s, i) => {
@@ -226,7 +249,7 @@ function EarningsProjectChart({ slices, currency }) {
           <span className="font-semibold" style={{ color: '#2b2a27' }}>{formatCurrency(total, currency)}</span>
         </div>
       </div>
-    </div>
+    </HoverCard>
   )
 }
 
@@ -257,7 +280,7 @@ function HourCapSection({ projects, entries }) {
   const fmtH = (h) => h.toFixed(1).replace('.', ',')
 
   return (
-    <div className="rounded-2xl p-6 mb-4" style={cardStyle}>
+    <HoverCard className="rounded-2xl p-6 mb-4">
       <h2 className="text-sm font-semibold mb-4" style={{ color: '#2b2a27' }}>Uren deze maand per project</h2>
       <div className="space-y-4">
         {rows.map(({ project, hours, max }) => {
@@ -296,7 +319,7 @@ function HourCapSection({ projects, entries }) {
           )
         })}
       </div>
-    </div>
+    </HoverCard>
   )
 }
 
