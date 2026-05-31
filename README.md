@@ -1,42 +1,54 @@
 # Urentracker
 
-Een persoonlijke time-tracking app. Draait in de browser met Supabase als backend — data beschikbaar op alle toestellen na inloggen.
+Persoonlijke time-tracking app voor freelancers. Start een timer, log uren per project, bekijk earnings en genereer facturen als PDF.
 
 **Live:** [urentracker-nine.vercel.app](https://urentracker-nine.vercel.app)
 
-## Setup
+## Functionaliteit
 
-### 1. Supabase-project aanmaken
+- **Timer** — start/stop met beschrijving, project en tags
+- **Handmatige invoer** — voeg entries toe met start- en eindtijd
+- **Projectbeheer** — naam, kleur, klant, uurtarief en uurlimiet
+- **Rapporten** — earnings KPIs en grafieken per periode
+- **Facturatie** — PDF-facturen per project per maand
+- **Multi-device** — data gesynchroniseerd via Supabase, timer loopt door op elk toestel
 
-1. Ga naar [supabase.com](https://supabase.com) en maak een gratis account en project aan
-2. Open **SQL Editor** → **New query**, plak de inhoud van `supabase/schema.sql` en voer uit
-3. Ga naar **Authentication → Providers** en zorg dat **Email** provider actief is
-4. Maak je account aan via **Authentication → Users → Add user** (gebruik je eigen e-mailadres)
+## Stack
+
+- [React](https://react.dev) + [TypeScript](https://www.typescriptlang.org)
+- [Vite](https://vitejs.dev)
+- [Tailwind CSS](https://tailwindcss.com)
+- [Supabase](https://supabase.com) (Postgres + Auth + Row Level Security)
+- [Vercel](https://vercel.com) (hosting)
+
+## Zelf hosten
+
+### 1. Supabase opzetten
+
+1. Maak een gratis project aan op [supabase.com](https://supabase.com)
+2. Open **SQL Editor → New query**, plak de inhoud van `supabase/schema.sql` en voer uit
+3. Zet de **Email** auth provider aan onder **Authentication → Providers**
+4. Maak je account aan via **Authentication → Users → Add user**
 5. Optioneel: schakel nieuwe signups uit via **Authentication → Providers → Email → Disable signups**
 
-### 2. Env-vars instellen
-
-Kopieer `.env.local.example` naar `.env.local` en vul in:
+### 2. Env-variabelen
 
 ```bash
 cp .env.local.example .env.local
 ```
 
-De waarden vind je in je Supabase-project onder **Settings → API**:
-- `VITE_SUPABASE_URL`: Project URL
-- `VITE_SUPABASE_ANON_KEY`: anon / public key
-
-`.env.local` staat al in `.gitignore` via het `*.local` patroon — dit bestand komt nooit in git.
-
-### 3. Vercel deployment
-
-Voeg dezelfde twee env-vars toe in je Vercel-project:
-**Settings → Environment Variables → Add**
+Vul in vanuit **Settings → API** in je Supabase-project:
 
 ```
 VITE_SUPABASE_URL      = https://jouw-project-id.supabase.co
 VITE_SUPABASE_ANON_KEY = jouw-anon-key
 ```
+
+`.env.local` valt onder het `*.local` patroon in `.gitignore` en komt nooit in git.
+
+### 3. Vercel
+
+Voeg dezelfde twee env-vars toe onder **Settings → Environment Variables** in je Vercel-project.
 
 ## Lokaal draaien
 
@@ -45,24 +57,4 @@ npm install
 npm run dev
 ```
 
-Open daarna http://localhost:5173.
-
-## Gratis tier
-
-Alles blijft binnen de Supabase gratis tier:
-- 500 MB database
-- 50.000 MAU (monthly active users) — voor 1 gebruiker geen enkel probleem
-- Onbeperkte API requests
-
-## Functionaliteit
-
-- **Timer**: Start/stop timer met beschrijving, project en tags
-- **Manual entry**: Voeg entries manueel toe met start- en eindtijd
-- **Projects**: Beheer projecten met naam, kleur, klant, uurtarief en uurlimiet
-- **Reports**: Earnings KPIs + grafieken (tijd en verdiensten)
-- **Facturatie**: Genereer PDF-facturen per project per maand
-- **Multi-device**: Log in op elk toestel — timer en data zijn overal gesynchroniseerd
-
-## Data
-
-Data wordt opgeslagen in Supabase Postgres. Elke tabel heeft Row Level Security: jij leest en schrijft enkel jouw eigen data. De lopende timer wordt ook in de database bewaard, zodat je op een ander toestel kunt zien dat hij loopt.
+Open http://localhost:5173.
